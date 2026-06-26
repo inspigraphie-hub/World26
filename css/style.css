@@ -299,6 +299,54 @@ section{
     }
 }
 
+@media(max-width:700px){
+    body{
+        background:#fff;
+    }
+
+    .bg-left,
+    .bg-right{
+        display:none;
+    }
+
+    section,
+    .container,
+    .quick-actions{
+        max-width:100%;
+        width:100%;
+        padding-left:14px;
+        padding-right:14px;
+    }
+
+    h1{
+        font-size:36px;
+        line-height:1.05;
+    }
+
+    h2{
+        font-size:26px;
+    }
+
+    .separator{
+        margin-top:6px;
+    }
+
+    .quick-actions{
+        margin-bottom:28px;
+        padding-top:18px;
+    }
+
+    .quick-bracket-link{
+        min-height:44px;
+        box-shadow:0 10px 22px rgba(0,0,0,.12);
+    }
+
+    footer{
+        padding:28px 14px;
+        font-size:12px;
+    }
+}
+
 /* ===========================
    MATCHES
 =========================== */

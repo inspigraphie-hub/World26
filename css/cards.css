@@ -183,6 +183,32 @@ MATCHS DU JOUR
     gap:10px;
 }
 
+.live-score-status{
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    padding:10px 14px;
+    border-radius:999px;
+    background:#111;
+    color:#fff;
+    font-size:12px;
+    font-weight:900;
+    white-space:nowrap;
+}
+
+.live-score-status i{
+    color:#6EEB83;
+}
+
+.live-score-status.warning{
+    background:#fff5dd;
+    color:#8a5800;
+}
+
+.live-score-status.warning i{
+    color:#F5A524;
+}
+
 .filter-btn{
     border:0;
     padding:10px 14px;
@@ -217,7 +243,25 @@ MATCHS DU JOUR
 
 .status-pill.done{ background:rgba(110,235,131,.24); color:#168040; }
 .status-pill.upcoming{ background:rgba(0,212,255,.16); color:#007c96; }
-.status-pill.live{ background:rgba(255,86,86,.16); color:#d91f1f; }
+.status-pill.live{
+    position:relative;
+    padding-left:24px;
+    background:rgba(255,86,86,.16);
+    color:#d91f1f;
+}
+
+.status-pill.live::before{
+    content:"";
+    position:absolute;
+    left:10px;
+    top:50%;
+    width:7px;
+    height:7px;
+    border-radius:50%;
+    background:#ff3030;
+    transform:translateY(-50%);
+    animation:livePulse 1.2s ease-in-out infinite;
+}
 
 /*==========================================
 MATCHES
@@ -305,6 +349,23 @@ CARD MATCH GROUPE
         #FF4DB8
     );
 
+}
+
+.match-card.live,
+.today-card.live{
+    border:2px solid rgba(255,48,48,.28);
+    box-shadow:0 16px 34px rgba(255,48,48,.12);
+}
+
+.match-card.live .score-number,
+.today-card.live .today-team span{
+    color:#d91f1f;
+    transform:scale(1.05);
+}
+
+.match-card.score-updated .score-number,
+.today-card.score-updated .today-team span{
+    animation:scoreFlash 1.8s ease;
 }
 
 /*==========================================
@@ -680,6 +741,26 @@ ANIMATIONS APPARITION
 
 }
 
+@keyframes livePulse{
+    0%,100%{
+        box-shadow:0 0 0 0 rgba(255,48,48,.35);
+    }
+
+    50%{
+        box-shadow:0 0 0 6px rgba(255,48,48,0);
+    }
+}
+
+@keyframes scoreFlash{
+    0%{
+        background:#fff1b8;
+    }
+
+    100%{
+        background:#fff;
+    }
+}
+
 /*==========================================
 RESPONSIVE
 ==========================================*/
@@ -776,6 +857,11 @@ RESPONSIVE
     grid-template-columns:repeat(3,minmax(0,1fr));
     width:100%;
     gap:7px;
+}
+
+.live-score-status{
+    width:100%;
+    justify-content:center;
 }
 
 .filter-btn{
@@ -1200,10 +1286,9 @@ FAN HUB
     margin:22px auto 0;
 }
 
-.fan-grid{
+.fan-strip{
     display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:18px;
+    grid-template-columns:minmax(0,1fr);
     margin-bottom:28px;
 }
 
@@ -1228,7 +1313,7 @@ FAN HUB
 }
 
 .prono-teaser .section-kicker{
-    color:#F5A524;
+    color:#066af6;
 }
 
 .prono-teaser p{
@@ -1247,8 +1332,8 @@ FAN HUB
     width:max-content;
     padding:11px 15px;
     border-radius:999px;
-    background:#F5A524;
-    color:#111;
+    background:#066af6;
+    color:#fff;
     font-size:13px;
     font-weight:900;
 }
@@ -1330,6 +1415,7 @@ FAN HUB
 
 .quick-rankings{
     margin-top:10px;
+    overflow:hidden;
 }
 
 .quick-rankings-header{
@@ -1337,8 +1423,52 @@ FAN HUB
 }
 
 .quick-rankings-grid{
-    display:grid;
-    grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+    display:flex;
+    gap:14px;
+    overflow-x:auto;
+    overflow-y:hidden;
+    padding:2px 2px 14px;
+    scroll-snap-type:x mandatory;
+    scrollbar-width:thin;
+}
+
+.quick-rankings-grid::-webkit-scrollbar{
+    height:8px;
+}
+
+.quick-rankings-grid::-webkit-scrollbar-thumb{
+    background:#d8d8d8;
+    border-radius:999px;
+}
+
+.quick-ranking-card{
+    flex:0 0 290px;
+    scroll-snap-align:start;
+}
+
+.quick-ranking-card.compact{
+    min-height:0;
+}
+
+.quick-ranking-card.compact p:nth-of-type(n+4){
+    display:none;
+}
+
+.quick-ranking-card.compact .ranking-card-head{
+    padding:16px 16px 8px;
+}
+
+.quick-ranking-card.compact p{
+    padding:10px 16px;
+}
+
+@media(min-width:1000px){
+    .quick-ranking-card{
+        flex-basis:300px;
+    }
+}
+
+.quick-rankings-grid{
     gap:16px;
 }
 
@@ -1475,19 +1605,14 @@ FAN HUB
 
 .prono-match-link{
     text-decoration:none;
-    background:#F5A524;
-    color:#111;
+    background:#066af6;
+    color:#fff;
 }
 
 @media(max-width:700px){
     .fan-hub{
         margin-top:8px;
         margin-bottom:34px;
-    }
-
-    .fan-grid{
-        grid-template-columns:1fr;
-        gap:12px;
     }
 
     .fan-panel,
@@ -1507,7 +1632,7 @@ FAN HUB
     }
 
     .quick-rankings-grid{
-        grid-template-columns:1fr;
+        display:flex;
     }
 
     .site-pulse span{
@@ -1525,5 +1650,234 @@ FAN HUB
 
     .share-match span{
         display:none;
+    }
+}
+
+@media(max-width:700px){
+    .today-section,
+    .fan-hub,
+    .matches,
+    .bracket-section{
+        width:100%;
+        max-width:100%;
+        padding-left:14px;
+        padding-right:14px;
+    }
+
+    .today-section{
+        margin-top:14px;
+        margin-bottom:20px;
+    }
+
+    .today-header{
+        padding:0;
+    }
+
+    .today-count,
+    .live-score-status{
+        min-height:36px;
+    }
+
+    .today-card{
+        box-shadow:0 8px 18px rgba(0,0,0,.07);
+        border-radius:16px;
+    }
+
+    .fan-hub{
+        margin-bottom:24px;
+    }
+
+    .site-pulse{
+        display:grid;
+        grid-template-columns:1fr;
+        gap:8px;
+        margin-bottom:12px;
+    }
+
+    .site-pulse span{
+        width:100%;
+        min-height:36px;
+        padding:8px 10px;
+        border-radius:12px;
+        justify-content:flex-start;
+        font-size:11px;
+    }
+
+    .fan-panel{
+        padding:14px;
+        border-radius:16px;
+        box-shadow:0 8px 18px rgba(0,0,0,.07);
+    }
+
+    .fan-panel h2{
+        font-size:20px;
+        margin-bottom:10px;
+    }
+
+    .countdown span,
+    .countdown strong{
+        padding:8px 10px;
+        font-size:11px;
+    }
+
+    .quick-rankings-header{
+        margin-bottom:10px;
+    }
+
+    .quick-rankings-header h2{
+        font-size:22px;
+        margin-bottom:0;
+    }
+
+    .quick-rankings-grid{
+        margin-left:-14px;
+        margin-right:-14px;
+        padding-left:14px;
+        padding-right:14px;
+        gap:10px;
+    }
+
+    .quick-ranking-card{
+        flex-basis:255px;
+        border-radius:16px;
+        box-shadow:0 8px 18px rgba(0,0,0,.07);
+    }
+
+    .ranking-card-head{
+        gap:9px;
+    }
+
+    .ranking-card-head i{
+        width:34px;
+        height:34px;
+        border-radius:11px;
+        font-size:14px;
+    }
+
+    .quick-ranking-card h3{
+        font-size:15px;
+    }
+
+    .quick-ranking-card p{
+        font-size:11px;
+    }
+
+    .matches{
+        margin-top:34px;
+        margin-bottom:62px;
+    }
+
+    .matches-heading{
+        top:0;
+        margin-left:-14px;
+        margin-right:-14px;
+        padding:10px 14px 12px;
+        border-bottom:1px solid #eee;
+    }
+
+    .matches-heading h2{
+        font-size:24px;
+    }
+
+    .match-filters{
+        grid-template-columns:repeat(5,max-content);
+        overflow-x:auto;
+        display:flex;
+        flex-wrap:nowrap;
+        padding-bottom:2px;
+        scrollbar-width:none;
+    }
+
+    .match-filters::-webkit-scrollbar{
+        display:none;
+    }
+
+    .filter-btn{
+        flex:0 0 auto;
+        min-height:36px;
+        padding:8px 12px;
+        font-size:11px;
+    }
+
+    #matchesContainer{
+        grid-template-columns:repeat(2,minmax(0,1fr));
+        gap:9px;
+    }
+
+    .match-card{
+        padding:10px;
+        border-radius:15px;
+        box-shadow:0 8px 18px rgba(0,0,0,.07);
+    }
+
+    .match-date{
+        margin-bottom:8px;
+    }
+
+    .teams{
+        gap:6px;
+    }
+
+    .team img{
+        width:28px;
+        height:20px;
+    }
+
+    .team h3{
+        font-size:9px;
+        line-height:1.15;
+    }
+
+    .score-number{
+        min-width:42px;
+        min-height:32px;
+        font-size:12px;
+        border-radius:11px;
+    }
+
+    .bracket-section{
+        margin-top:58px;
+        margin-bottom:70px;
+    }
+
+    .bracket-section h2{
+        font-size:26px;
+        margin-bottom:18px;
+    }
+
+    .bracket-round-nav{
+        margin-left:-14px;
+        margin-right:-14px;
+        padding-left:14px;
+        padding-right:14px;
+        overflow-x:auto;
+        flex-wrap:nowrap;
+        scrollbar-width:none;
+    }
+
+    .bracket-round-nav::-webkit-scrollbar{
+        display:none;
+    }
+
+    .bracket-round-nav button{
+        flex:0 0 auto;
+        min-width:84px;
+    }
+
+    .bracket-wrapper{
+        margin-left:-14px;
+        margin-right:-14px;
+        border-radius:0;
+        padding:18px 14px;
+    }
+}
+
+@media(max-width:380px){
+    #matchesContainer{
+        grid-template-columns:1fr;
+    }
+
+    .quick-ranking-card{
+        flex-basis:238px;
     }
 }

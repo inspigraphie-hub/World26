@@ -64,12 +64,14 @@
 .wallet-card strong{
     font-size:58px;
     line-height:1;
-    color:#F5A524;
+    color:#066af6;
     font-weight:900;
 }
 
 .wallet-card button,
 .favorite-picker button,
+.profile-switcher button,
+.profile-create button,
 .prono-tabs button,
 .bet-submit,
 #resetBets{
@@ -85,13 +87,13 @@
 .wallet-card button{
     width:max-content;
     margin-top:8px;
-    background:#F5A524;
-    color:#111;
+    background:#066af6;
+    color:#fff;
 }
 
 .prono-control-grid{
     display:grid;
-    grid-template-columns:1fr 1fr;
+    grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
     gap:18px;
     margin-bottom:28px;
 }
@@ -108,13 +110,17 @@
     line-height:1.1;
 }
 
-.favorite-picker{
+.favorite-picker,
+.profile-switcher,
+.profile-create{
     display:flex;
     gap:10px;
     margin-bottom:12px;
 }
 
-.favorite-picker select{
+.favorite-picker select,
+.profile-switcher select,
+.profile-create input{
     min-width:0;
     flex:1;
     border:0;
@@ -128,12 +134,15 @@
 }
 
 .favorite-picker button,
+.profile-switcher button,
+.profile-create button,
 .bet-submit{
     background:#111;
     color:#fff;
 }
 
-#favoriteSignal{
+#favoriteSignal,
+#profileSignal{
     color:#555;
     font-size:13px;
     font-weight:800;
@@ -207,8 +216,16 @@
 }
 
 .prono-card.favorite{
-    border-color:#F5A524;
-    box-shadow:0 14px 32px rgba(245,165,36,.18);
+    border-color:#066af6;
+    box-shadow:0 14px 32px rgba(6,106,246,.18);
+}
+
+.prono-card.live{
+    border-color:rgba(255,48,48,.35);
+}
+
+.prono-card[data-locked="1"]{
+    background:#fafafa;
 }
 
 .prono-card-meta,
@@ -368,6 +385,18 @@
     color:#168040;
 }
 
+.history-row.lost strong{
+    color:#d91f1f;
+}
+
+.history-row.won{
+    background:rgba(110,235,131,.14);
+}
+
+.history-row.lost{
+    background:rgba(255,80,80,.10);
+}
+
 #resetBets{
     background:#f0f0f0;
     color:#222;
@@ -375,7 +404,12 @@
 
 @media(max-width:760px){
     .prono-page{
-        margin-top:28px;
+        width:100%;
+        max-width:100%;
+        margin-top:22px;
+        margin-bottom:70px;
+        padding-left:14px;
+        padding-right:14px;
     }
 
     .prono-hero,
@@ -384,11 +418,18 @@
     }
 
     .prono-hero h1{
-        font-size:34px;
+        font-size:30px;
+        line-height:1.05;
+        margin-bottom:10px;
+    }
+
+    .prono-hero p{
+        font-size:13px;
+        line-height:1.45;
     }
 
     .wallet-card strong{
-        font-size:46px;
+        font-size:42px;
     }
 
     .streak-stats{
@@ -398,6 +439,14 @@
     .prono-section-head{
         align-items:flex-start;
         flex-direction:column;
+        gap:10px;
+        margin-bottom:14px;
+    }
+
+    .prono-section-head h2,
+    .prono-panel h2{
+        font-size:22px;
+        margin-bottom:10px;
     }
 
     .prono-tabs{
@@ -417,10 +466,91 @@
     .prono-hero > div:first-child,
     .wallet-card{
         padding:16px;
-        border-radius:20px;
+        border-radius:18px;
+        box-shadow:0 8px 20px rgba(0,0,0,.07);
     }
 
     .prono-matches{
         grid-template-columns:1fr;
+        gap:12px;
+    }
+
+    .prono-card{
+        gap:12px;
+        padding:14px;
+        border-radius:18px;
+    }
+
+    .prono-card-meta{
+        align-items:flex-start;
+        flex-direction:column;
+        gap:6px;
+    }
+
+    .prono-teams{
+        grid-template-columns:minmax(0,1fr) 52px minmax(0,1fr);
+        gap:8px;
+    }
+
+    .prono-team{
+        font-size:12px;
+    }
+
+    .versus-pill{
+        width:52px;
+        height:38px;
+        border-radius:14px;
+    }
+
+    .odds-grid{
+        gap:7px;
+    }
+
+    .odd-button{
+        min-height:58px;
+        padding:8px 6px;
+    }
+
+    .odd-button span{
+        font-size:10px;
+        overflow:hidden;
+        text-overflow:ellipsis;
+        white-space:nowrap;
+    }
+
+    .bet-row{
+        gap:8px;
+    }
+
+    .stake-input{
+        width:96px;
+    }
+
+    .bet-submit,
+    .wallet-card button,
+    .favorite-picker button{
+        min-height:42px;
+    }
+
+    .favorite-picker,
+    .profile-switcher,
+    .profile-create{
+        flex-direction:column;
+    }
+
+    .streak-stats span{
+        padding:12px;
+        border-radius:14px;
+    }
+
+    .history-row{
+        grid-template-columns:1fr;
+        gap:8px;
+        padding:12px;
+        border-radius:14px;
+    }
+
+    .history-row strong{
+        justify-self:start;
     }
 }

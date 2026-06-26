@@ -20,10 +20,10 @@
         href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
 
     <!-- CSS -->
-    <link rel="stylesheet" href="css/style.css?v=3">
-    <link rel="stylesheet" href="css/header.css?v=2">
+    <link rel="stylesheet" href="css/style.css?v=4">
+    <link rel="stylesheet" href="css/header.css?v=5">
     <link rel="stylesheet" href="css/hero.css?v=3">
-    <link rel="stylesheet" href="css/cards.css?v=4">
+    <link rel="stylesheet" href="css/cards.css?v=8">
     <link rel="stylesheet" href="css/responsive.css">
 
 </head>
@@ -87,16 +87,9 @@
     <section id="fanHub" class="fan-hub reveal">
         <div id="sitePulse" class="site-pulse"></div>
 
-        <div class="fan-grid">
-            <a href="prono.html" class="fan-panel prono-teaser">
-                <span class="section-kicker">Pronos</span>
-                <h2>D&eacute;fie tes potes avec tes jetons</h2>
-                <p>Choisis ton &eacute;quipe, mise sur les prochains matchs et grimpe au classement.</p>
-                <strong><i class="fa-solid fa-coins"></i> Jouer mes pronos</strong>
-            </a>
-
+        <div class="fan-strip">
             <div class="fan-panel countdown-panel">
-                <span class="section-kicker">Prochain coup d'envoi</span>
+                <span class="section-kicker">Prochain match</span>
                 <h2 id="nextMatchTitle">&Agrave; venir</h2>
                 <div id="nextMatchCountdown" class="countdown"></div>
             </div>
@@ -137,6 +130,10 @@
                 <button class="filter-btn" type="button" data-filter="upcoming">&Agrave; venir</button>
                 <button class="filter-btn" type="button" data-filter="done">Termin&eacute;s</button>
                 </div>
+                <div id="liveScoreStatus" class="live-score-status">
+                    <i class="fa-solid fa-satellite-dish" aria-hidden="true"></i>
+                    <span>Scores live actifs</span>
+                </div>
             </div>
         </div>
 
@@ -171,9 +168,9 @@
     <!-- Papa Parse -->
     <script src="https://cdn.jsdelivr.net/npm/papaparse@5.5.3/papaparse.min.js"></script>
 
-    <script src="js/csv.js?v=3"></script>
+    <script src="js/csv.js?v=5"></script>
     <script src="js/matches.js?v=3"></script>
-    <script src="js/fan.js?v=4"></script>
+    <script src="js/fan.js?v=5"></script>
     <script src="js/app.js"></script>
 
 </body>

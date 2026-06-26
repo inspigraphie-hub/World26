@@ -149,12 +149,11 @@
         const content = rows.length
             ? rows.map((row, index) => "<p><span><em>" + (index + 1) + "</em>" + row.label + "</span><b>" + row.value + "</b></p>").join("")
             : "<p><span><em>0</em>À venir</span><b>-</b></p>";
-        return "<article class=\"quick-ranking-card tone-" + tone + "\"><div class=\"ranking-card-head\"><i class=\"fa-solid " + icon + "\"></i><h3>" + title + "</h3></div>" + content + "</article>";
+        return "<article class=\"quick-ranking-card compact tone-" + tone + "\"><div class=\"ranking-card-head\"><i class=\"fa-solid " + icon + "\"></i><h3>" + title + "</h3></div>" + content + "</article>";
     }
 
     enhanceMatchCards() {
         this.linkTeams();
-        this.addCardActions();
     }
 
     linkTeams() {
@@ -173,8 +172,7 @@
             if(teams.length < 2) return;
             const actions = document.createElement("div");
             actions.className = "match-actions";
-            actions.innerHTML = "<a class=\"prono-match-link\" href=\"prono.html\"><i class=\"fa-solid fa-coins\"></i><span>Prono</span></a>" +
-                "<button type=\"button\" class=\"share-match\"><i class=\"fa-solid fa-share-nodes\"></i><span>Partager</span></button>";
+            actions.innerHTML = "<button type=\"button\" class=\"share-match\"><i class=\"fa-solid fa-share-nodes\"></i><span>Partager</span></button>";
             actions.querySelector(".share-match").addEventListener("click", () => this.shareMatch(card.innerText.split("\n").filter(Boolean).join(" | ")));
             card.appendChild(actions);
         });
