@@ -1,0 +1,87 @@
+﻿<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Classement - Coupe du Monde FIFA 2026</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+    
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/header.css?v=2">
+    <link rel="stylesheet" href="css/hero.css">
+    <link rel="stylesheet" href="css/cards.css?v=4">
+    <link rel="stylesheet" href="css/classement.css">
+    <link rel="stylesheet" href="css/responsive.css">
+</head>
+
+<body>
+
+    <img src="assets/bg-left.png" class="bg-left">
+    <img src="assets/bg-right.png" class="bg-right">
+
+    <header>
+        <div class="logo">
+            <img src="assets/logo.png">
+        </div>
+
+        <nav>
+            <a href="index.html" class="green">MATCHS</a>
+            <a href="groups.html" class="purple">GROUPES</a>
+            <a href="classement.html" class="active cyan">CLASSEMENT</a>
+            <a href="stats.html" class="red">STATS</a>
+            <a href="prono.html" class="gold">PRONO</a>
+        </nav>
+    </header>
+
+    <div class="separator"></div>
+
+    <section id="sitePulse" class="site-pulse page-pulse"></section>
+
+    <section class="hero">
+        <h2>Coupe du Monde</h2>
+        <h1>FIFA 2026&trade;</h1>
+        <h1>Classement</h1>
+    </section>
+
+    <section class="standings">
+        <h2>Classement des groupes</h2>
+
+        <div class="standings-legend">
+            <div class="legend-item">
+                <span class="legend-dot legend-direct"></span>
+                Qualifi&eacute;s directs
+            </div>
+
+            <div class="legend-item">
+                <span class="legend-dot legend-third"></span>
+                Meilleurs troisi&egrave;mes
+            </div>
+
+            <div class="legend-item">
+                <span class="legend-dot legend-out"></span>
+                &Eacute;limin&eacute;s
+            </div>
+        </div>
+
+        <div id="standingsContainer"></div>
+
+        <h2 class="thirds-title">Classement des meilleurs troisi&egrave;mes</h2>
+
+        <div id="thirdsContainer"></div>
+    </section>
+
+    <footer>
+        Coupe du Monde FIFA 2026 &copy;
+    </footer>
+
+    <script src="js/classement.js"></script>
+
+    <script src="js/fan.js?v=4"></script>
+    <script src="js/page-pulse.js?v=1"></script>`r`n</body>
+</html>
