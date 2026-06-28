@@ -66,9 +66,7 @@ class MatchManager {
 
     async loadKnockoutLive() {
         try {
-            const response = await fetch("data/knockout_live.json?t=" + Date.now(), { cache: "no-store" });
-            if (!response.ok) return { matches: [] };
-            return await response.json();
+            return await this.fetchJSONWithFallback("/api/knockout-live", "data/knockout_live.json");
         } catch (error) {
             return { matches: [] };
         }
@@ -76,12 +74,26 @@ class MatchManager {
 
     async loadLiveScores() {
         try {
-            const response = await fetch("data/live_scores.json?t=" + Date.now(), { cache: "no-store" });
-            if (!response.ok) return { matches: [] };
-            return await response.json();
+            return await this.fetchJSONWithFallback("/api/live-scores", "data/live_scores.json");
         } catch (error) {
             return { matches: [] };
         }
+    }
+
+    async fetchJSONWithFallback(apiPath, fallbackPath) {
+        const paths = [apiPath, fallbackPath];
+
+        for (const path of paths) {
+            try {
+                const separator = path.includes("?") ? "&" : "?";
+                const response = await fetch(path + separator + "t=" + Date.now(), { cache: "no-store" });
+                if (response.ok) return await response.json();
+            } catch (error) {
+                // Try the next source.
+            }
+        }
+
+        return { matches: [] };
     }
 
     mergeLiveScores(matches, liveMatches) {
