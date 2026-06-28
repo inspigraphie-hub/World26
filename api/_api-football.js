@@ -164,12 +164,20 @@ async function fetchFixtures(options = {}) {
 }
 
 function apiConfigInfo() {
+    let fixtureIds = [];
+    try {
+        fixtureIds = knockoutFixtureIds();
+    } catch (error) {
+        fixtureIds = [];
+    }
+
     return {
         hasApiKey: Boolean(process.env.APIFOOTBALL_KEY),
         league: process.env.APIFOOTBALL_LEAGUE || process.env.APIFOOTBALL_LEAGUE_ID || "1",
         season: process.env.APIFOOTBALL_SEASON || "2026",
         from: process.env.APIFOOTBALL_FROM || "2026-06-11",
-        to: process.env.APIFOOTBALL_TO || "2026-07-19"
+        to: process.env.APIFOOTBALL_TO || "2026-07-19",
+        knockoutFixtureIds: fixtureIds
     };
 }
 

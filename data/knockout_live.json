@@ -1,6 +1,6 @@
 {
-  "updatedAt": "2026-06-28T21:57:28.091Z",
-  "source": "csv-fallback",
+  "updatedAt": "2026-06-28T22:06:21.955Z",
+  "source": "manual-final-score",
   "matches": [
     {
       "id": "M73",
@@ -12,12 +12,12 @@
       "equipe2": "Canada",
       "drapeau1": "za.png",
       "drapeau2": "ca.png",
-      "score1": "",
-      "score2": "",
+      "score1": "0",
+      "score2": "1",
       "diffuseur": "M6, beIN Sports 1",
-      "statut": "À venir",
+      "statut": "Terminé",
       "minute": "",
-      "winner": "",
+      "winner": "Canada",
       "apiFixtureId": "1561329"
     },
     {
