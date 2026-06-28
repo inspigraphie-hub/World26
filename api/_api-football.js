@@ -119,6 +119,7 @@ async function fetchFixtures(options = {}) {
     const from = process.env.APIFOOTBALL_FROM || "2026-06-11";
     const to = process.env.APIFOOTBALL_TO || "2026-07-19";
     const includeFullFixtures = options.includeCompetitionFixtures || process.env.APIFOOTBALL_INCLUDE_FULL_FIXTURES === "1";
+    const fixtureIds = Array.isArray(options.fixtureIds) ? options.fixtureIds.filter(Boolean) : [];
     const urls = [
         `${BASE_URL}?live=all`
     ];
@@ -126,6 +127,10 @@ async function fetchFixtures(options = {}) {
     if (league && includeFullFixtures) {
         urls.push(`${BASE_URL}?league=${encodeURIComponent(league)}&season=${encodeURIComponent(season)}&from=${from}&to=${to}`);
     }
+
+    fixtureIds.forEach(id => {
+        urls.push(`${BASE_URL}?id=${encodeURIComponent(id)}`);
+    });
 
     const fixtures = [];
     const seen = new Set();
@@ -203,6 +208,12 @@ function toKnockoutLiveScores(fixtures) {
         apiConfig: apiConfigInfo(),
         matches
     };
+}
+
+function knockoutFixtureIds() {
+    return readCSV("data/Matchs_16es_Coupe_du_Monde_2026.csv")
+        .map(match => match.ApiFixtureId || match.apiFixtureId || "")
+        .filter(Boolean);
 }
 
 function toSiteLiveScore(fixture, siteMatches) {
@@ -380,6 +391,7 @@ function fixEncoding(text) {
 module.exports = {
     fetchFixtures,
     apiConfigInfo,
+    knockoutFixtureIds,
     readJSON,
     safeReadJSON,
     toKnockoutLiveScores,

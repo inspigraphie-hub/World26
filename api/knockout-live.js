@@ -1,4 +1,4 @@
-const { apiConfigInfo, fetchFixtures, safeReadJSON, toKnockoutLiveScores } = require("./_api-football");
+const { apiConfigInfo, fetchFixtures, knockoutFixtureIds, safeReadJSON, toKnockoutLiveScores } = require("./_api-football");
 
 const EMPTY_KNOCKOUT = {
     updatedAt: new Date().toISOString(),
@@ -19,7 +19,10 @@ module.exports = async function handler(req, res) {
             });
         }
 
-        const fixtures = await fetchFixtures({ includeCompetitionFixtures: true });
+        const fixtures = await fetchFixtures({
+            includeCompetitionFixtures: true,
+            fixtureIds: knockoutFixtureIds()
+        });
         return res.status(200).json(toKnockoutLiveScores(fixtures));
     } catch (error) {
         return res.status(200).json({

@@ -1,6 +1,6 @@
 {
-  "updatedAt": "2026-06-28T20:41:07.486Z",
-  "source": "api-football-fixtures",
+  "updatedAt": "2026-06-28T21:57:28.091Z",
+  "source": "csv-fallback",
   "matches": [
     {
       "id": "M73",
@@ -14,9 +14,11 @@
       "drapeau2": "ca.png",
       "score1": "",
       "score2": "",
+      "diffuseur": "M6, beIN Sports 1",
       "statut": "À venir",
       "minute": "",
-      "winner": ""
+      "winner": "",
+      "apiFixtureId": "1561329"
     },
     {
       "id": "M74",
@@ -30,9 +32,11 @@
       "drapeau2": "jp.png",
       "score1": "",
       "score2": "",
+      "diffuseur": "M6, beIN Sports 1",
       "statut": "À venir",
       "minute": "",
-      "winner": ""
+      "winner": "",
+      "apiFixtureId": ""
     },
     {
       "id": "M75",
@@ -46,9 +50,11 @@
       "drapeau2": "py.png",
       "score1": "",
       "score2": "",
+      "diffuseur": "M6, beIN Sports 1",
       "statut": "À venir",
       "minute": "",
-      "winner": ""
+      "winner": "",
+      "apiFixtureId": ""
     },
     {
       "id": "M76",
@@ -62,9 +68,11 @@
       "drapeau2": "ma.png",
       "score1": "",
       "score2": "",
+      "diffuseur": "beIN Sports 1",
       "statut": "À venir",
       "minute": "",
-      "winner": ""
+      "winner": "",
+      "apiFixtureId": ""
     },
     {
       "id": "M77",
@@ -78,9 +86,11 @@
       "drapeau2": "no.png",
       "score1": "",
       "score2": "",
+      "diffuseur": "M6, beIN Sports 1",
       "statut": "À venir",
       "minute": "",
-      "winner": ""
+      "winner": "",
+      "apiFixtureId": ""
     },
     {
       "id": "M78",
@@ -94,9 +104,11 @@
       "drapeau2": "se.png",
       "score1": "",
       "score2": "",
+      "diffuseur": "M6, beIN Sports 1",
       "statut": "À venir",
       "minute": "",
-      "winner": ""
+      "winner": "",
+      "apiFixtureId": ""
     },
     {
       "id": "M79",
@@ -110,9 +122,11 @@
       "drapeau2": "ec.png",
       "score1": "",
       "score2": "",
+      "diffuseur": "beIN Sports 1",
       "statut": "À venir",
       "minute": "",
-      "winner": ""
+      "winner": "",
+      "apiFixtureId": ""
     },
     {
       "id": "M80",
@@ -126,9 +140,11 @@
       "drapeau2": "cd.png",
       "score1": "",
       "score2": "",
+      "diffuseur": "M6, beIN Sports 1",
       "statut": "À venir",
       "minute": "",
-      "winner": ""
+      "winner": "",
+      "apiFixtureId": ""
     },
     {
       "id": "M81",
@@ -142,9 +158,11 @@
       "drapeau2": "sn.png",
       "score1": "",
       "score2": "",
+      "diffuseur": "beIN Sports 1",
       "statut": "À venir",
       "minute": "",
-      "winner": ""
+      "winner": "",
+      "apiFixtureId": ""
     },
     {
       "id": "M82",
@@ -158,9 +176,11 @@
       "drapeau2": "ba.png",
       "score1": "",
       "score2": "",
+      "diffuseur": "beIN Sports 1",
       "statut": "À venir",
       "minute": "",
-      "winner": ""
+      "winner": "",
+      "apiFixtureId": ""
     },
     {
       "id": "M83",
@@ -174,9 +194,11 @@
       "drapeau2": "at.png",
       "score1": "",
       "score2": "",
+      "diffuseur": "M6, beIN Sports 1",
       "statut": "À venir",
       "minute": "",
-      "winner": ""
+      "winner": "",
+      "apiFixtureId": ""
     },
     {
       "id": "M84",
@@ -190,9 +212,11 @@
       "drapeau2": "hr.png",
       "score1": "",
       "score2": "",
+      "diffuseur": "beIN Sports 1",
       "statut": "À venir",
       "minute": "",
-      "winner": ""
+      "winner": "",
+      "apiFixtureId": ""
     },
     {
       "id": "M85",
@@ -206,9 +230,11 @@
       "drapeau2": "dz.png",
       "score1": "",
       "score2": "",
+      "diffuseur": "beIN Sports 1",
       "statut": "À venir",
       "minute": "",
-      "winner": ""
+      "winner": "",
+      "apiFixtureId": ""
     },
     {
       "id": "M86",
@@ -222,9 +248,11 @@
       "drapeau2": "eg.png",
       "score1": "",
       "score2": "",
+      "diffuseur": "M6, beIN Sports 1",
       "statut": "À venir",
       "minute": "",
-      "winner": ""
+      "winner": "",
+      "apiFixtureId": ""
     },
     {
       "id": "M87",
@@ -238,9 +266,11 @@
       "drapeau2": "cv.png",
       "score1": "",
       "score2": "",
+      "diffuseur": "M6, beIN Sports 1",
       "statut": "À venir",
       "minute": "",
-      "winner": ""
+      "winner": "",
+      "apiFixtureId": ""
     },
     {
       "id": "M88",
@@ -254,9 +284,11 @@
       "drapeau2": "gh.png",
       "score1": "",
       "score2": "",
+      "diffuseur": "beIN Sports 1",
       "statut": "À venir",
       "minute": "",
-      "winner": ""
+      "winner": "",
+      "apiFixtureId": ""
     }
   ]
 }
