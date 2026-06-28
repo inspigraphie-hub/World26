@@ -81,6 +81,14 @@ function readJSON(relativePath) {
     return JSON.parse(fs.readFileSync(path.join(ROOT, relativePath), "utf8"));
 }
 
+function safeReadJSON(relativePath, fallback) {
+    try {
+        return readJSON(relativePath);
+    } catch (error) {
+        return fallback;
+    }
+}
+
 function readCSV(relativePath) {
     const csv = fixEncoding(fs.readFileSync(path.join(ROOT, relativePath), "utf8"));
     const lines = csv.trim().split(/\r?\n/).filter(Boolean);
@@ -307,6 +315,7 @@ function fixEncoding(text) {
 module.exports = {
     fetchFixtures,
     readJSON,
+    safeReadJSON,
     toKnockoutLiveScores,
     toSiteLiveScores
 };
