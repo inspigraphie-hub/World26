@@ -3,6 +3,12 @@ const path = require("path");
 
 const ROOT = path.resolve(__dirname, "..");
 const BASE_URL = "https://v3.football.api-sports.io/fixtures";
+const FIXTURE_CACHE_MS = Number(process.env.APIFOOTBALL_CACHE_MS || 60000);
+
+let fixtureCache = {
+    expiresAt: 0,
+    fixtures: []
+};
 
 const aliases = {
     "Algeria": "Algérie",
@@ -107,15 +113,19 @@ async function fetchFixtures() {
     const apiKey = process.env.APIFOOTBALL_KEY;
     if (!apiKey) return [];
 
+    const now = Date.now();
+    if (fixtureCache.expiresAt > now) return fixtureCache.fixtures;
+
     const league = process.env.APIFOOTBALL_LEAGUE || process.env.APIFOOTBALL_LEAGUE_ID || "";
     const season = process.env.APIFOOTBALL_SEASON || "2026";
     const from = process.env.APIFOOTBALL_FROM || "2026-06-11";
     const to = process.env.APIFOOTBALL_TO || "2026-07-19";
+    const includeFullFixtures = process.env.APIFOOTBALL_INCLUDE_FULL_FIXTURES === "1";
     const urls = [
         `${BASE_URL}?live=all`
     ];
 
-    if (league) {
+    if (league && includeFullFixtures) {
         urls.push(`${BASE_URL}?league=${encodeURIComponent(league)}&season=${encodeURIComponent(season)}&from=${from}&to=${to}`);
     }
 
@@ -141,6 +151,11 @@ async function fetchFixtures() {
             fixtures.push(fixture);
         });
     }
+
+    fixtureCache = {
+        expiresAt: now + FIXTURE_CACHE_MS,
+        fixtures
+    };
 
     return fixtures;
 }
