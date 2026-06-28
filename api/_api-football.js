@@ -109,18 +109,19 @@ function readCSV(relativePath) {
     });
 }
 
-async function fetchFixtures() {
+async function fetchFixtures(options = {}) {
     const apiKey = process.env.APIFOOTBALL_KEY;
     if (!apiKey) return [];
 
+    const cacheKey = options.includeCompetitionFixtures ? "competition" : "live";
     const now = Date.now();
-    if (fixtureCache.expiresAt > now) return fixtureCache.fixtures;
+    if (fixtureCache[cacheKey]?.expiresAt > now) return fixtureCache[cacheKey].fixtures;
 
     const league = process.env.APIFOOTBALL_LEAGUE || process.env.APIFOOTBALL_LEAGUE_ID || "";
     const season = process.env.APIFOOTBALL_SEASON || "2026";
     const from = process.env.APIFOOTBALL_FROM || "2026-06-11";
     const to = process.env.APIFOOTBALL_TO || "2026-07-19";
-    const includeFullFixtures = process.env.APIFOOTBALL_INCLUDE_FULL_FIXTURES === "1";
+    const includeFullFixtures = options.includeCompetitionFixtures || process.env.APIFOOTBALL_INCLUDE_FULL_FIXTURES === "1";
     const urls = [
         `${BASE_URL}?live=all`
     ];
@@ -152,7 +153,7 @@ async function fetchFixtures() {
         });
     }
 
-    fixtureCache = {
+    fixtureCache[cacheKey] = {
         expiresAt: now + FIXTURE_CACHE_MS,
         fixtures
     };
@@ -171,6 +172,7 @@ function toSiteLiveScores(fixtures) {
         source: "vercel-api-football",
         fixtureCount: fixtures.length,
         matchedCount: mapped.length,
+        mode: "live",
         matches: mapped
     };
 }
@@ -189,6 +191,7 @@ function toKnockoutLiveScores(fixtures) {
         source: "vercel-api-football",
         fixtureCount: fixtures.length,
         matchedCount: matches.filter(match => match.apiFixtureId).length,
+        mode: "competition",
         matches
     };
 }

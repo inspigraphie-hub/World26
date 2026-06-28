@@ -18,7 +18,7 @@ module.exports = async function handler(req, res) {
             });
         }
 
-        const fixtures = await fetchFixtures();
+        const fixtures = await fetchFixtures({ includeCompetitionFixtures: true });
         return res.status(200).json(toKnockoutLiveScores(fixtures));
     } catch (error) {
         return res.status(200).json({
