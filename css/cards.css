@@ -1257,20 +1257,59 @@ TABLEAU FINAL
     .bracket-wrapper{
         padding:25px;
         border-radius:26px;
+        overflow-x:auto;
+        overflow-y:visible;
     }
 
     .bracket-container{
-        min-width:1540px;
+        display:grid;
+        min-width:1490px;
         grid-template-columns:180px 150px 150px 135px 180px 135px 150px 150px 180px;
         gap:18px;
+        align-items:stretch;
     }
 
     .bracket-column{
-        grid-template-rows:repeat(8, 144px);
+        display:grid;
+        grid-template-rows:repeat(8, 168px);
+        align-items:center;
+    }
+
+    .bracket-match{
+        width:auto;
+        align-self:center;
+        opacity:1;
+        transform:none;
+        padding:9px;
+        border-radius:15px;
+    }
+
+    .bracket-column:not(.round-finals) .bracket-match::after,
+    .bracket-column:nth-child(n+6) .bracket-match::after{
+        display:block;
+    }
+
+    .bracket-team{
+        grid-template-columns:27px minmax(0,1fr) 34px;
+        gap:6px;
+        padding:7px;
+    }
+
+    .bracket-team img,
+    .bracket-empty{
+        width:27px;
+        height:19px;
     }
 
     .bracket-team span{
-        font-size:11px;
+        font-size:10px;
+        white-space:nowrap;
+        line-height:1.15;
+    }
+
+    .bracket-label{
+        font-size:10px;
+        line-height:1.2;
     }
 
 }
@@ -1852,6 +1891,27 @@ FAN HUB
         margin-right:-14px;
         border-radius:0;
         padding:18px 14px;
+        overflow-x:auto;
+        overflow-y:visible;
+    }
+
+    .bracket-container{
+        display:grid;
+        min-width:1490px;
+        width:max-content;
+        grid-template-columns:180px 150px 150px 135px 180px 135px 150px 150px 180px;
+        gap:18px;
+    }
+
+    .bracket-column{
+        display:grid;
+        grid-template-rows:repeat(8, 168px);
+        width:auto;
+    }
+
+    .bracket-match{
+        width:auto;
+        align-self:center;
     }
 }
 

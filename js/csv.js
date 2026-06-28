@@ -295,7 +295,7 @@ class MatchManager {
             const matchesSearch = this.searchTerm === "" || teams.includes(this.searchTerm);
 
             if (!matchesSearch) return false;
-            if (this.activeFilter === "today") return (match["Date"] === today && this.isActuallyUpcoming(match)) || this.statusKey(match) === "live" || match._liveUpdated;
+            if (this.activeFilter === "today") return match["Date"] === today || match._liveUpdated;
             if (this.activeFilter === "france") return [match["Domicile"], match["Exterieur"]].includes("France");
             if (this.activeFilter === "upcoming") return status === "upcoming" || status === "live";
             if (this.activeFilter === "done") return status === "done";
@@ -313,7 +313,7 @@ class MatchManager {
 
         const today = this.todayKey();
         const liveUpdatedMatches = this.matches.filter(match => match._liveUpdated);
-        let matches = this.sortMatchesByTime(this.matches.filter(match => match["Date"] === today && this.isActuallyUpcoming(match)));
+        let matches = this.sortMatchesByTime(this.matches.filter(match => match["Date"] === today));
         let title = "Matchs du jour";
 
         if (liveUpdatedMatches.length > 0) {
@@ -350,9 +350,9 @@ class MatchManager {
     </div>
 
     <div class="today-teams">
-        ${this.compactTeam(match["Domicile"], match["Score Domicile"], this.isWinner(match, "home"), match["Drapeau Domicile"])}
+        ${this.compactTeam(match["Domicile"], "", this.isWinner(match, "home"), match["Drapeau Domicile"])}
         <span class="today-separator">${this.matchCenterText(match)}</span>
-        ${this.compactTeam(match["Exterieur"], match["Score Exterieur"], this.isWinner(match, "away"), match["Drapeau Exterieur"])}
+        ${this.compactTeam(match["Exterieur"], "", this.isWinner(match, "away"), match["Drapeau Exterieur"])}
     </div>
 
     ${match.Diffuseur ? `<div class="today-broadcaster">${match.Diffuseur}</div>` : ""}
@@ -499,7 +499,7 @@ class MatchManager {
     getNextUpcomingMatches(limit) {
         const now = new Date();
         return this.matches
-            .filter(match => this.isActuallyUpcoming(match))
+            .filter(match => this.statusKey(match) === "upcoming")
             .sort((a, b) => {
                 const dateDiff = this.sortDateValue(a._rawDate || a.Date) - this.sortDateValue(b._rawDate || b.Date);
                 if (dateDiff !== 0) return dateDiff;
@@ -507,17 +507,6 @@ class MatchManager {
             })
             .filter(match => this.sortDateValue(match._rawDate || match.Date) >= new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime())
             .slice(0, limit);
-    }
-
-    isActuallyUpcoming(match) {
-        const status = this.statusKey(match);
-        if (status === "live") return true;
-        if (status === "done") return false;
-
-        const value = this.matchDateTimeValue(match);
-        if (!value) return true;
-
-        return value >= Date.now();
     }
 
     sortDateValue(value) {

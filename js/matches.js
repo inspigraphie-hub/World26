@@ -348,6 +348,12 @@
 
         if(!nav || !wrapper) return;
 
+        const firstButton = nav.querySelector("button[data-round]");
+        if(firstButton && !nav.querySelector("button.active")) {
+            firstButton.classList.add("active");
+            this.container.dataset.activeRound = firstButton.dataset.round;
+        }
+
         nav.addEventListener("click", event => {
             const button = event.target.closest("button[data-round]");
             if(!button) return;
@@ -358,6 +364,8 @@
             nav.querySelectorAll("button").forEach(item => {
                 item.classList.toggle("active", item === button);
             });
+
+            this.container.dataset.activeRound = button.dataset.round;
 
             wrapper.scrollTo({
                 left: Math.max(column.offsetLeft - 18, 0),

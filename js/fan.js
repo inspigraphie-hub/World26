@@ -207,7 +207,7 @@ class FanExperience {
     renderPulse() {
         const containers = document.querySelectorAll("#sitePulse");
         if(containers.length === 0) return;
-        const todayMatches = this.matches.filter(match => match.Date === this.todayKey() && this.isActuallyUpcoming(match));
+        const todayMatches = this.matches.filter(match => match.Date === this.todayKey());
         const next = this.nextUpcomingMatch();
         const france = this.teamStatus("France");
         const brazil = this.nextMatchForTeam("Brésil");
@@ -266,7 +266,7 @@ class FanExperience {
         const attacks = [...this.standings].sort((a,b) => Number(b.Bp || 0) - Number(a.Bp || 0));
         const defenses = [...this.standings].sort((a,b) => Number(a.Bc || 99) - Number(b.Bc || 99));
         const qualified = this.standings.filter(team => Number(team.Pts || 0) >= 6).slice(0, 6);
-        const upcoming = this.matches.filter(match => this.isActuallyUpcoming(match)).slice(0, 4);
+        const upcoming = this.matches.filter(match => this.statusKey(match) !== "done").slice(0, 4);
         grid.innerHTML = [
             this.rankingCard("Top buteurs", "fa-futbol", "green", this.scorers.slice(0, 5).map(player => ({ label: player.Joueurs, value: player.Buts + " buts" }))),
             this.rankingCard("Top passeurs", "fa-wand-magic-sparkles", "cyan", this.assists.slice(0, 5).map(player => ({ label: player.Joueurs, value: player["Passes D."] + " passes" }))),
@@ -341,28 +341,17 @@ class FanExperience {
     }
 
     nextUpcomingMatch() {
-        return this.sortUpcomingFirst(this.matches).find(match => this.isActuallyUpcoming(match));
+        return this.sortUpcomingFirst(this.matches).find(match => this.statusKey(match) !== "done");
     }
 
     nextMatchForTeam(team) {
-        return this.sortUpcomingFirst(this.matches).find(match => this.isActuallyUpcoming(match) && [match.Domicile, match.Exterieur].includes(team));
+        return this.sortUpcomingFirst(this.matches).find(match => this.statusKey(match) !== "done" && [match.Domicile, match.Exterieur].includes(team));
     }
 
     sortUpcomingFirst(matches) {
-        const upcoming = matches.filter(match => this.isActuallyUpcoming(match)).sort((a, b) => this.matchDateTimeValue(a) - this.matchDateTimeValue(b));
-        const done = matches.filter(match => !this.isActuallyUpcoming(match)).sort((a, b) => this.matchDateTimeValue(b) - this.matchDateTimeValue(a));
+        const upcoming = matches.filter(match => this.statusKey(match) !== "done").sort((a, b) => this.matchDateTimeValue(a) - this.matchDateTimeValue(b));
+        const done = matches.filter(match => this.statusKey(match) === "done").sort((a, b) => this.matchDateTimeValue(b) - this.matchDateTimeValue(a));
         return [...upcoming, ...done];
-    }
-
-    isActuallyUpcoming(match) {
-        const status = this.statusKey(match);
-        if(status === "live") return true;
-        if(status === "done") return false;
-
-        const value = this.matchDateTimeValue(match);
-        if(!value) return true;
-
-        return value >= Date.now();
     }
 
     matchDateTimeValue(match) {
