@@ -5,10 +5,7 @@ const ROOT = path.resolve(__dirname, "..");
 const BASE_URL = "https://v3.football.api-sports.io/fixtures";
 const FIXTURE_CACHE_MS = Number(process.env.APIFOOTBALL_CACHE_MS || 60000);
 
-let fixtureCache = {
-    expiresAt: 0,
-    fixtures: []
-};
+let fixtureCache = {};
 
 const aliases = {
     "Algeria": "Algérie",
@@ -117,7 +114,7 @@ async function fetchFixtures(options = {}) {
     const now = Date.now();
     if (fixtureCache[cacheKey]?.expiresAt > now) return fixtureCache[cacheKey].fixtures;
 
-    const league = process.env.APIFOOTBALL_LEAGUE || process.env.APIFOOTBALL_LEAGUE_ID || "";
+    const league = process.env.APIFOOTBALL_LEAGUE || process.env.APIFOOTBALL_LEAGUE_ID || "1";
     const season = process.env.APIFOOTBALL_SEASON || "2026";
     const from = process.env.APIFOOTBALL_FROM || "2026-06-11";
     const to = process.env.APIFOOTBALL_TO || "2026-07-19";
@@ -161,6 +158,16 @@ async function fetchFixtures(options = {}) {
     return fixtures;
 }
 
+function apiConfigInfo() {
+    return {
+        hasApiKey: Boolean(process.env.APIFOOTBALL_KEY),
+        league: process.env.APIFOOTBALL_LEAGUE || process.env.APIFOOTBALL_LEAGUE_ID || "1",
+        season: process.env.APIFOOTBALL_SEASON || "2026",
+        from: process.env.APIFOOTBALL_FROM || "2026-06-11",
+        to: process.env.APIFOOTBALL_TO || "2026-07-19"
+    };
+}
+
 function toSiteLiveScores(fixtures) {
     const siteMatches = readCSV("data/Resultats_Coupe_du_Monde.csv");
     const mapped = fixtures
@@ -173,6 +180,7 @@ function toSiteLiveScores(fixtures) {
         fixtureCount: fixtures.length,
         matchedCount: mapped.length,
         mode: "live",
+        apiConfig: apiConfigInfo(),
         matches: mapped
     };
 }
@@ -192,6 +200,7 @@ function toKnockoutLiveScores(fixtures) {
         fixtureCount: fixtures.length,
         matchedCount: matches.filter(match => match.apiFixtureId).length,
         mode: "competition",
+        apiConfig: apiConfigInfo(),
         matches
     };
 }
@@ -370,6 +379,7 @@ function fixEncoding(text) {
 
 module.exports = {
     fetchFixtures,
+    apiConfigInfo,
     readJSON,
     safeReadJSON,
     toKnockoutLiveScores,

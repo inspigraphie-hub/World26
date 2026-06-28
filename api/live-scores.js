@@ -1,4 +1,4 @@
-const { fetchFixtures, safeReadJSON, toSiteLiveScores } = require("./_api-football");
+const { apiConfigInfo, fetchFixtures, safeReadJSON, toSiteLiveScores } = require("./_api-football");
 
 const EMPTY_LIVE_SCORES = {
     updatedAt: new Date().toISOString(),
@@ -14,7 +14,8 @@ module.exports = async function handler(req, res) {
         if (!process.env.APIFOOTBALL_KEY) {
             return res.status(200).json({
                 ...safeReadJSON("data/live_scores.json", EMPTY_LIVE_SCORES),
-                source: "local-fallback-no-api-key"
+                source: "local-fallback-no-api-key",
+                apiConfig: apiConfigInfo()
             });
         }
 
@@ -24,6 +25,7 @@ module.exports = async function handler(req, res) {
         return res.status(200).json({
             ...safeReadJSON("data/live_scores.json", EMPTY_LIVE_SCORES),
             source: "local-fallback-api-error",
+            apiConfig: apiConfigInfo(),
             warning: error.message
         });
     }
