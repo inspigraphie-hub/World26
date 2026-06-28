@@ -111,20 +111,38 @@ async function fetchFixtures() {
     const season = process.env.APIFOOTBALL_SEASON || "2026";
     const from = process.env.APIFOOTBALL_FROM || "2026-06-11";
     const to = process.env.APIFOOTBALL_TO || "2026-07-19";
-    const url = league
-        ? `${BASE_URL}?league=${encodeURIComponent(league)}&season=${encodeURIComponent(season)}&from=${from}&to=${to}`
-        : `${BASE_URL}?live=all`;
+    const urls = [
+        `${BASE_URL}?live=all`
+    ];
 
-    const response = await fetch(url, {
-        headers: { "x-apisports-key": apiKey }
-    });
-
-    if (!response.ok) {
-        throw new Error(`API-Football ${response.status}: ${await response.text()}`);
+    if (league) {
+        urls.push(`${BASE_URL}?league=${encodeURIComponent(league)}&season=${encodeURIComponent(season)}&from=${from}&to=${to}`);
     }
 
-    const payload = await response.json();
-    return Array.isArray(payload.response) ? payload.response : [];
+    const fixtures = [];
+    const seen = new Set();
+
+    for (const url of urls) {
+        const response = await fetch(url, {
+            headers: { "x-apisports-key": apiKey }
+        });
+
+        if (!response.ok) {
+            throw new Error(`API-Football ${response.status}: ${await response.text()}`);
+        }
+
+        const payload = await response.json();
+        const rows = Array.isArray(payload.response) ? payload.response : [];
+
+        rows.forEach(fixture => {
+            const id = fixture.fixture?.id || `${fixture.fixture?.date || ""}-${fixture.teams?.home?.name || ""}-${fixture.teams?.away?.name || ""}`;
+            if (seen.has(id)) return;
+            seen.add(id);
+            fixtures.push(fixture);
+        });
+    }
+
+    return fixtures;
 }
 
 function toSiteLiveScores(fixtures) {
@@ -136,6 +154,8 @@ function toSiteLiveScores(fixtures) {
     return {
         updatedAt: new Date().toISOString(),
         source: "vercel-api-football",
+        fixtureCount: fixtures.length,
+        matchedCount: mapped.length,
         matches: mapped
     };
 }
@@ -144,13 +164,17 @@ function toKnockoutLiveScores(fixtures) {
     const knockoutMatches = readCSV("data/Matchs_16es_Coupe_du_Monde_2026.csv")
         .map((match, index) => ({ ...match, Id: String(73 + index) }));
 
+    const matches = knockoutMatches.map(match => {
+        const found = findFixture(match.Equipe1, match.Equipe2, fixtures);
+        return found ? toKnockoutLiveScore(match, found.fixture, found.reversed) : baseKnockoutLiveScore(match);
+    });
+
     return {
         updatedAt: new Date().toISOString(),
         source: "vercel-api-football",
-        matches: knockoutMatches.map(match => {
-            const fixture = findFixture(match.Equipe1, match.Equipe2, fixtures);
-            return fixture ? toKnockoutLiveScore(match, fixture) : baseKnockoutLiveScore(match);
-        })
+        fixtureCount: fixtures.length,
+        matchedCount: matches.filter(match => match.apiFixtureId).length,
+        matches
     };
 }
 
@@ -175,12 +199,16 @@ function toSiteLiveScore(fixture, siteMatches) {
     };
 }
 
-function toKnockoutLiveScore(match, fixture) {
+function toKnockoutLiveScore(match, fixture, reversed = false) {
     const home = translateTeam(fixture.teams?.home?.name || match.Equipe1 || "");
     const away = translateTeam(fixture.teams?.away?.name || match.Equipe2 || "");
-    const score1 = scoreValue(fixture.goals?.home);
-    const score2 = scoreValue(fixture.goals?.away);
+    const scoreHome = scoreValue(fixture.goals?.home);
+    const scoreAway = scoreValue(fixture.goals?.away);
+    const score1 = reversed ? scoreAway : scoreHome;
+    const score2 = reversed ? scoreHome : scoreAway;
     const status = statusLabel(fixture.fixture?.status?.short || match.Statut || "");
+    const team1 = reversed ? away : home;
+    const team2 = reversed ? home : away;
 
     return {
         id: "M" + match.Id,
@@ -188,15 +216,15 @@ function toKnockoutLiveScore(match, fixture) {
         date: apiDate(fixture.fixture?.date) || match.Date,
         jour: match.Jour,
         heure: apiTime(fixture.fixture?.date) || match.Heure,
-        equipe1: home || match.Equipe1,
-        equipe2: away || match.Equipe2,
-        drapeau1: flagFor(home || match.Equipe1) || match.Drapeau1,
-        drapeau2: flagFor(away || match.Equipe2) || match.Drapeau2,
+        equipe1: team1 || match.Equipe1,
+        equipe2: team2 || match.Equipe2,
+        drapeau1: flagFor(team1 || match.Equipe1) || match.Drapeau1,
+        drapeau2: flagFor(team2 || match.Equipe2) || match.Drapeau2,
         score1,
         score2,
         statut: status,
         minute: String(fixture.fixture?.status?.elapsed ?? ""),
-        winner: winnerName(home, away, score1, score2, status),
+        winner: winnerName(team1, team2, score1, score2, status),
         apiFixtureId: fixture.fixture?.id || ""
     };
 }
@@ -229,11 +257,21 @@ function findSiteMatch(home, away, siteMatches) {
 }
 
 function findFixture(home, away, fixtures) {
-    return fixtures.find(fixture => {
+    const direct = fixtures.find(fixture => {
         const fixtureHome = translateTeam(fixture.teams?.home?.name || "");
         const fixtureAway = translateTeam(fixture.teams?.away?.name || "");
         return sameTeam(home, fixtureHome) && sameTeam(away, fixtureAway);
-    }) || null;
+    });
+
+    if (direct) return { fixture: direct, reversed: false };
+
+    const reversed = fixtures.find(fixture => {
+        const fixtureHome = translateTeam(fixture.teams?.home?.name || "");
+        const fixtureAway = translateTeam(fixture.teams?.away?.name || "");
+        return sameTeam(home, fixtureAway) && sameTeam(away, fixtureHome);
+    });
+
+    return reversed ? { fixture: reversed, reversed: true } : null;
 }
 
 function statusLabel(short) {
