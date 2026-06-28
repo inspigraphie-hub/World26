@@ -80,14 +80,32 @@
     color:#fff;
 }
 
-.player-photo{
+.player-photo-wrap{
+    position:relative;
     width:100%;
     height:300px;
-    object-fit:cover;
     border-radius:24px;
     background:#f3f3f3;
+    overflow:hidden;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+}
+
+.player-photo-wrap span{
+    color:#777;
+    font-size:48px;
+    font-weight:900;
+}
+
+.player-photo{
+    width:100%;
+    height:100%;
+    object-fit:cover;
     display:block;
     transition:.4s;
+    position:absolute;
+    inset:0;
 }
 
 .player-card:hover .player-photo{
@@ -186,12 +204,15 @@
         font-size:13px;
     }
 
-    .player-photo{
+    .player-photo-wrap{
         width:88px;
         height:auto;
         aspect-ratio:4 / 5;
         border-radius:16px;
-        object-fit:cover;
+    }
+
+    .player-photo-wrap span{
+        font-size:24px;
     }
 
     .player-card:hover .player-photo{
@@ -230,7 +251,7 @@
         padding:10px;
     }
 
-    .player-photo{
+    .player-photo-wrap{
         width:84px;
     }
 

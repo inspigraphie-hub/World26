@@ -1,4 +1,4 @@
-﻿class FanExperience {
+class FanExperience {
     constructor() {
         this.matches = [];
         this.scorers = [];
@@ -14,28 +14,160 @@
                 this.loadCSV("data/Resultats_Coupe_du_Monde.csv"),
                 this.loadCSV("data/meilleurs_buteurs.csv"),
                 this.loadCSV("data/meilleurs_passeurs.csv"),
-                this.loadCSV("data/Classement.csv")
+                this.loadCSV("data/Classement.csv"),
+                this.loadLiveScores(),
+                this.loadLiveStats(),
+                this.loadKnockoutMatches()
             ]);
-            this.matches = data[0];
-            this.scorers = data[1];
-            this.assists = data[2];
-            this.standings = data[3];
+            this.matches = this.sortUpcomingFirst(this.mergeLiveScores([...data[0], ...data[6]], data[4].matches || []));
+            this.scorers = this.mergePlayers(data[1], data[5].scorers || [], "Buts");
+            this.assists = this.mergePlayers(data[2], data[5].assists || [], "Passes D.");
+            this.standings = this.buildStandingsFromMatches(this.matches, data[3]);
 
             this.renderPulse();
             this.renderCountdown();
             this.renderQuickRankings();
             this.enhanceMatchCards();
             document.addEventListener("matches:updated", () => this.enhanceMatchCards());
+            document.addEventListener("scores:live-update", event => {
+                this.matches = event.detail?.matches || this.matches;
+                this.standings = this.buildStandingsFromMatches(this.matches, this.standings);
+                this.renderPulse();
+                this.renderCountdown();
+                this.renderQuickRankings();
+            });
         } catch(error) {
             console.error(error);
         }
     }
 
     async loadCSV(path) {
-        const response = await fetch(path);
+        const response = await fetch(path + "?t=" + Date.now(), { cache: "no-store" });
         if(!response.ok) throw new Error("Impossible de charger " + path);
         const text = await response.text();
         return this.parseCSV(this.fixEncoding(text));
+    }
+
+    async loadLiveScores() {
+        try {
+            const response = await fetch("data/live_scores.json?t=" + Date.now(), { cache: "no-store" });
+            if(!response.ok) return { matches: [] };
+            return await response.json();
+        } catch(error) {
+            return { matches: [] };
+        }
+    }
+
+    async loadLiveStats() {
+        try {
+            const response = await fetch("data/live_stats.json?t=" + Date.now(), { cache: "no-store" });
+            if(!response.ok) return { scorers: [], assists: [] };
+            return await response.json();
+        } catch(error) {
+            return { scorers: [], assists: [] };
+        }
+    }
+
+    async loadKnockoutMatches() {
+        try {
+            const rows = await this.loadCSV("data/Matchs_16es_Coupe_du_Monde_2026.csv");
+            return rows.map(row => ({
+                Date: this.displayDate(row.Date),
+                Groupe: "16e de finale",
+                Domicile: row.Equipe1 || row["Équipe1"] || "",
+                Exterieur: row.Equipe2 || row["Équipe2"] || "",
+                "Score Domicile": row.Score1 || "",
+                "Score Exterieur": row.Score2 || "",
+                Statut: row.Statut || "À venir",
+                Heure: row.Heure || "",
+                _rawDate: row.Date || ""
+            }));
+        } catch(error) {
+            return [];
+        }
+    }
+
+    mergeLiveScores(matches, liveMatches) {
+        const liveMap = new Map();
+        liveMatches.forEach(match => liveMap.set(this.matchKey(match), match));
+
+        return matches.map(match => {
+            const live = liveMap.get(this.matchKey(match));
+            if(!live) return match;
+            return {
+                ...match,
+                "Score Domicile": live["Score Domicile"] ?? live.scoreHome ?? live.score1 ?? match["Score Domicile"],
+                "Score Exterieur": live["Score Exterieur"] ?? live.scoreAway ?? live.score2 ?? match["Score Exterieur"],
+                Statut: live.Statut ?? live.status ?? match.Statut,
+                Minute: live.Minute ?? live.minute ?? match.Minute ?? ""
+            };
+        });
+    }
+
+    mergePlayers(fallbackRows, liveRows, statColumn) {
+        const map = new Map();
+
+        fallbackRows.forEach(row => {
+            const name = row.Joueurs || row.name;
+            if(!name) return;
+            map.set(this.normalize(name), { ...row });
+        });
+
+        liveRows.forEach(row => {
+            const name = row.Joueurs || row.name || row.player;
+            if(!name) return;
+            const key = this.normalize(name);
+            const existing = map.get(key) || {};
+            map.set(key, {
+                ...existing,
+                ...row,
+                Joueurs: name,
+                Photo: row.Photo || existing.Photo || "",
+                [statColumn]: String(row[statColumn] ?? row.value ?? existing[statColumn] ?? 0)
+            });
+        });
+
+        return [...map.values()]
+            .sort((a,b) => Number(b[statColumn] || 0) - Number(a[statColumn] || 0) || String(a.Joueurs).localeCompare(String(b.Joueurs), "fr"))
+            .map((row, index) => ({ ...row, Rang: index + 1 }));
+    }
+
+    buildStandingsFromMatches(matches, fallback) {
+        const map = new Map();
+
+        const ensure = team => {
+            if(!map.has(team)) {
+                map.set(team, { "Équipe": team, J: 0, G: 0, N: 0, P: 0, Bp: 0, Bc: 0, "Dif.": 0, Pts: 0 });
+            }
+            return map.get(team);
+        };
+
+        matches.filter(match => this.statusKey(match) === "done").forEach(match => {
+            const home = ensure(match.Domicile);
+            const away = ensure(match.Exterieur);
+            const homeScore = Number(match["Score Domicile"]);
+            const awayScore = Number(match["Score Exterieur"]);
+            if(Number.isNaN(homeScore) || Number.isNaN(awayScore)) return;
+
+            home.J += 1; away.J += 1;
+            home.Bp += homeScore; home.Bc += awayScore;
+            away.Bp += awayScore; away.Bc += homeScore;
+
+            if(homeScore > awayScore) {
+                home.G += 1; away.P += 1; home.Pts += 3;
+            } else if(awayScore > homeScore) {
+                away.G += 1; home.P += 1; away.Pts += 3;
+            } else {
+                home.N += 1; away.N += 1; home.Pts += 1; away.Pts += 1;
+            }
+        });
+
+        if(map.size === 0) return fallback;
+
+        return [...map.values()].map(team => ({
+            ...team,
+            "Dif.": team.Bp - team.Bc
+        })).sort((a, b) => b.Pts - a.Pts || b["Dif."] - a["Dif."] || b.Bp - a.Bp);
     }
 
     fixEncoding(text) {
@@ -75,7 +207,7 @@
     renderPulse() {
         const containers = document.querySelectorAll("#sitePulse");
         if(containers.length === 0) return;
-        const todayMatches = this.matches.filter(match => match.Date === this.todayKey());
+        const todayMatches = this.matches.filter(match => match.Date === this.todayKey() && this.isActuallyUpcoming(match));
         const next = this.nextUpcomingMatch();
         const france = this.teamStatus("France");
         const brazil = this.nextMatchForTeam("Brésil");
@@ -134,7 +266,7 @@
         const attacks = [...this.standings].sort((a,b) => Number(b.Bp || 0) - Number(a.Bp || 0));
         const defenses = [...this.standings].sort((a,b) => Number(a.Bc || 99) - Number(b.Bc || 99));
         const qualified = this.standings.filter(team => Number(team.Pts || 0) >= 6).slice(0, 6);
-        const upcoming = this.matches.filter(match => this.statusKey(match) !== "done").slice(0, 4);
+        const upcoming = this.matches.filter(match => this.isActuallyUpcoming(match)).slice(0, 4);
         grid.innerHTML = [
             this.rankingCard("Top buteurs", "fa-futbol", "green", this.scorers.slice(0, 5).map(player => ({ label: player.Joueurs, value: player.Buts + " buts" }))),
             this.rankingCard("Top passeurs", "fa-wand-magic-sparkles", "cyan", this.assists.slice(0, 5).map(player => ({ label: player.Joueurs, value: player["Passes D."] + " passes" }))),
@@ -209,15 +341,79 @@
     }
 
     nextUpcomingMatch() {
-        return this.matches.find(match => this.statusKey(match) !== "done");
+        return this.sortUpcomingFirst(this.matches).find(match => this.isActuallyUpcoming(match));
     }
 
     nextMatchForTeam(team) {
-        return this.matches.find(match => this.statusKey(match) !== "done" && [match.Domicile, match.Exterieur].includes(team));
+        return this.sortUpcomingFirst(this.matches).find(match => this.isActuallyUpcoming(match) && [match.Domicile, match.Exterieur].includes(team));
+    }
+
+    sortUpcomingFirst(matches) {
+        const upcoming = matches.filter(match => this.isActuallyUpcoming(match)).sort((a, b) => this.matchDateTimeValue(a) - this.matchDateTimeValue(b));
+        const done = matches.filter(match => !this.isActuallyUpcoming(match)).sort((a, b) => this.matchDateTimeValue(b) - this.matchDateTimeValue(a));
+        return [...upcoming, ...done];
+    }
+
+    isActuallyUpcoming(match) {
+        const status = this.statusKey(match);
+        if(status === "live") return true;
+        if(status === "done") return false;
+
+        const value = this.matchDateTimeValue(match);
+        if(!value) return true;
+
+        return value >= Date.now();
+    }
+
+    matchDateTimeValue(match) {
+        return this.sortDateValue(match._rawDate || match.Date) + this.timeValue(match.Heure) * 60000;
+    }
+
+    sortDateValue(value) {
+        const text = (value || "").toString().trim();
+        const fullDate = text.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
+        if(fullDate) return new Date(Number(fullDate[3]), Number(fullDate[2]) - 1, Number(fullDate[1])).getTime();
+        const compactDate = text.match(/^(\d{1,2})-([a-zéèêûôîïç]+)/i);
+        if(compactDate) {
+            const months = { janv:0, fevr:1, févr:1, mars:2, avr:3, mai:4, juin:5, juil:6, aout:7, août:7, sept:8, oct:9, nov:10, dec:11, déc:11 };
+            return new Date(2026, months[this.normalize(compactDate[2])] ?? 0, Number(compactDate[1])).getTime();
+        }
+        return 0;
+    }
+
+    timeValue(value) {
+        const match = (value || "").toString().match(/^(\d{1,2}):(\d{2})$/);
+        if(!match) return 0;
+        return Number(match[1]) * 60 + Number(match[2]);
+    }
+
+    displayDate(value) {
+        const match = (value || "").toString().match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
+        if(!match) return value || "";
+        const months = ["janv", "févr", "mars", "avr", "mai", "juin", "juil", "août", "sept", "oct", "nov", "déc"];
+        return Number(match[1]) + "-" + months[Number(match[2]) - 1];
     }
 
     opponentFor(match, team) {
         return match.Domicile === team ? match.Exterieur : match.Domicile;
+    }
+
+    matchKey(match) {
+        return [
+            match.Date || match.date || "",
+            match.Groupe || match.group || "",
+            match.Domicile || match.home || match.equipe1 || "",
+            match.Exterieur || match.away || match.equipe2 || ""
+        ].map(value => this.normalize(value)).join("|");
+    }
+
+    normalize(value) {
+        return String(value || "")
+            .normalize("NFD")
+            .replace(/[\u0300-\u036f]/g, "")
+            .toLowerCase()
+            .replace(/[^a-z0-9]+/g, "-")
+            .replace(/^-|-$/g, "");
     }
 
     teamStatus(team) {

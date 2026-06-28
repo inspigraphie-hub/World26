@@ -1,6 +1,4 @@
 {
-  "updatedAt": "2026-06-27T12:42:37.055Z",
-  "source": "api-football-fixtures",
   "matches": [
     {
       "Date": "28-juin",
@@ -9,28 +7,25 @@
       "Exterieur": "Portugal",
       "Score Domicile": "0",
       "Score Exterieur": "0",
-      "Statut": "Termine",
-      "Minute": ""
+      "Statut": "Termine"
     },
     {
       "Date": "28-juin",
       "Groupe": "Groupe K",
       "Domicile": "RD Congo",
-      "Exterieur": "Ouzbékistan",
+      "Exterieur": "Ouzbekistan",
       "Score Domicile": "3",
       "Score Exterieur": "1",
-      "Statut": "Termine",
-      "Minute": ""
+      "Statut": "Termine"
     },
     {
       "Date": "28-juin",
       "Groupe": "Groupe J",
-      "Domicile": "Algérie",
+      "Domicile": "Algerie",
       "Exterieur": "Autriche",
       "Score Domicile": "3",
       "Score Exterieur": "3",
-      "Statut": "Termine",
-      "Minute": ""
+      "Statut": "Termine"
     },
     {
       "Date": "28-juin",
@@ -39,8 +34,16 @@
       "Exterieur": "Argentine",
       "Score Domicile": "1",
       "Score Exterieur": "3",
-      "Statut": "Termine",
-      "Minute": ""
+      "Statut": "Termine"
     }
-  ]
+  ],
+  "knockout": [],
+  "scorers": [
+    {
+      "Joueurs": "Lionel Messi",
+      "Buts": 6,
+      "Photo": "messi.png"
+    }
+  ],
+  "assists": []
 }

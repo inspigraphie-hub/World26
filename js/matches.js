@@ -19,14 +19,58 @@
             const decoder = new TextDecoder("utf-8");
             const csv = this.fixEncoding(decoder.decode(buffer));
             const matches = this.parseCSV(csv);
+            const live = await this.loadKnockoutLive();
 
-            this.display(matches);
+            this.display(this.mergeKnockoutLive(matches, live.matches || []));
             this.bindRoundNavigation();
             this.observeAnimations();
+            this.startLiveRefresh();
         } catch(error) {
             console.error(error);
             this.container.innerHTML = "<h2>Impossible de charger le tableau final.</h2>";
         }
+    }
+
+    async loadKnockoutLive() {
+        try {
+            const response = await fetch("data/knockout_live.json?t=" + Date.now(), { cache: "no-store" });
+            if(!response.ok) return { matches: [] };
+            return await response.json();
+        } catch(error) {
+            return { matches: [] };
+        }
+    }
+
+    mergeKnockoutLive(matches, liveMatches) {
+        const liveMap = new Map();
+        liveMatches.forEach(match => {
+            if(match.id) liveMap.set(String(match.id), match);
+            if(match.date && match.equipe1 && match.equipe2) {
+                liveMap.set(this.matchKey(match.date, match.equipe1, match.equipe2), match);
+            }
+        });
+
+        return matches.map(match => {
+            const id = "M" + match.id;
+            const live = liveMap.get(id) || liveMap.get(this.matchKey(match.date, match.equipe1, match.equipe2));
+            if(!live) return match;
+
+            return {
+                ...match,
+                date: live.date || match.date,
+                jour: live.jour || match.jour,
+                heure: live.heure || match.heure,
+                equipe1: live.equipe1 || match.equipe1,
+                equipe2: live.equipe2 || match.equipe2,
+                drapeau1: live.drapeau1 || match.drapeau1,
+                drapeau2: live.drapeau2 || match.drapeau2,
+                score1: live.score1 ?? match.score1,
+                score2: live.score2 ?? match.score2,
+                statut: live.statut || match.statut || "",
+                winnerName: live.winner || match.winnerName || "",
+                minute: live.minute || ""
+            };
+        });
     }
 
     fixEncoding(text) {
@@ -82,7 +126,8 @@
             drapeau1: match["Drapeau1"] || match["Drapeau 1"] || "",
             drapeau2: match["Drapeau2"] || match["Drapeau 2"] || "",
             score1: match["Score1"] || match["Score Domicile"] || "",
-            score2: match["Score2"] || match["Score Exterieur"] || match["Score Extérieur"] || ""
+            score2: match["Score2"] || match["Score Exterieur"] || match["Score Extérieur"] || "",
+            statut: match["Statut"] || ""
         };
 
         normalized.id = Number(normalized.numero) || 73 + this.matchIndex;
@@ -157,6 +202,11 @@
     }
 
     getWinner(match) {
+        if(match.winnerName) {
+            if(this.sameTeam(match.winnerName, match.equipe1)) return { team: match.equipe1, flag: match.drapeau1 };
+            if(this.sameTeam(match.winnerName, match.equipe2)) return { team: match.equipe2, flag: match.drapeau2 };
+        }
+
         const score1 = Number(match.score1);
         const score2 = Number(match.score2);
 
@@ -170,6 +220,11 @@
     }
 
     getLoser(match) {
+        if(match.winnerName) {
+            if(this.sameTeam(match.winnerName, match.equipe1)) return { team: match.equipe2, flag: match.drapeau2 };
+            if(this.sameTeam(match.winnerName, match.equipe2)) return { team: match.equipe1, flag: match.drapeau1 };
+        }
+
         const score1 = Number(match.score1);
         const score2 = Number(match.score2);
 
@@ -208,7 +263,8 @@
 
     matchBox(match, index) {
         const meta = [match.jour || match.date, match.heure].filter(Boolean).join(" • ");
-        const time = meta ? '<div class="bracket-label">' + meta + '</div>' : "";
+        const status = match.statut ? ' <span class="bracket-status">' + match.statut + (match.minute ? " " + match.minute + "'" : "") + '</span>' : "";
+        const time = meta || status ? '<div class="bracket-label">' + meta + status + '</div>' : "";
 
         return [
             '<div class="bracket-match reveal-bracket" style="animation-delay:' + (index * 0.05) + 's">',
@@ -250,6 +306,40 @@
             '<span class="bracket-score">' + (score || "") + '</span>',
             '</div>'
         ].join("");
+    }
+
+    startLiveRefresh() {
+        setInterval(async () => {
+            try {
+                const response = await fetch("data/Matchs_16es_Coupe_du_Monde_2026.csv?t=" + Date.now(), { cache: "no-store" });
+                if(!response.ok) return;
+                const csv = this.fixEncoding(await response.text());
+                this.matchIndex = 0;
+                const matches = this.parseCSV(csv);
+                const live = await this.loadKnockoutLive();
+                this.display(this.mergeKnockoutLive(matches, live.matches || []));
+                this.observeAnimations();
+            } catch(error) {
+                console.warn("Tableau live en attente", error);
+            }
+        }, 30000);
+    }
+
+    matchKey(date, home, away) {
+        return [date, home, away].map(value => this.normalize(value)).join("|");
+    }
+
+    sameTeam(left, right) {
+        return this.normalize(left) === this.normalize(right);
+    }
+
+    normalize(value) {
+        return String(value || "")
+            .normalize("NFD")
+            .replace(/[\u0300-\u036f]/g, "")
+            .toLowerCase()
+            .replace(/[^a-z0-9]+/g, "-")
+            .replace(/^-|-$/g, "");
     }
 
     bindRoundNavigation() {

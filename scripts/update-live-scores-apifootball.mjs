@@ -1,12 +1,16 @@
-import fs from "node:fs/promises";
+﻿import fs from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const OUT_FILE = path.join(ROOT, "data", "live_scores.json");
 const KNOCKOUT_OUT_FILE = path.join(ROOT, "data", "knockout_live.json");
+const STATS_OUT_FILE = path.join(ROOT, "data", "live_stats.json");
+const MANUAL_FILE = path.join(ROOT, "data", "manual_updates.json");
 const CSV_FILE = path.join(ROOT, "data", "Resultats_Coupe_du_Monde.csv");
 const KNOCKOUT_CSV_FILE = path.join(ROOT, "data", "Matchs_16es_Coupe_du_Monde_2026.csv");
+const SCORERS_CSV_FILE = path.join(ROOT, "data", "meilleurs_buteurs.csv");
+const ASSISTS_CSV_FILE = path.join(ROOT, "data", "meilleurs_passeurs.csv");
 const API_KEY = process.env.APIFOOTBALL_KEY;
 const LEAGUE_ID = process.env.APIFOOTBALL_LEAGUE || process.env.APIFOOTBALL_LEAGUE_ID || "";
 const SEASON = process.env.APIFOOTBALL_SEASON || "2026";
@@ -15,8 +19,7 @@ const DATE_TO = process.env.APIFOOTBALL_TO || "2026-07-19";
 const BASE_URL = "https://v3.football.api-sports.io/fixtures";
 
 if (!API_KEY) {
-    console.error("APIFOOTBALL_KEY manquant. Exemple PowerShell : $env:APIFOOTBALL_KEY='ta_cle_api'");
-    process.exit(1);
+    console.warn("APIFOOTBALL_KEY manquant: le script applique seulement data/manual_updates.json et conserve les CSV existants.");
 }
 
 const aliases = {
@@ -95,20 +98,33 @@ const flagCodes = {
     "tchequie": "cz.png", "tunisie": "tn.png", "turquie": "tr.png", "ukraine": "ua.png", "uruguay": "uy.png"
 };
 
-const [siteMatches, knockoutMatches, fixtures] = await Promise.all([
+const [siteMatches, knockoutMatches, baseScorers, baseAssists, manualUpdates, fixtures] = await Promise.all([
     readSiteMatches(),
     readKnockoutMatches(),
+    readCSV(SCORERS_CSV_FILE),
+    readCSV(ASSISTS_CSV_FILE),
+    readManualUpdates(),
     fetchFixtures()
 ]);
 
-const liveMatches = fixtures
+const events = LEAGUE_ID ? await fetchEvents(fixtures) : [];
+
+const apiLiveMatches = fixtures
     .map(fixture => toSiteLiveScore(fixture, siteMatches))
     .filter(Boolean);
+const liveMatches = mergeManualSiteScores(apiLiveMatches, manualUpdates.matches || [], siteMatches);
 
-const knockoutMatchesLive = knockoutMatches.map(match => {
+const apiKnockoutMatchesLive = knockoutMatches.map(match => {
     const fixture = findFixtureForKnockout(match, fixtures);
     return fixture ? toKnockoutLiveScore(match, fixture) : baseKnockoutLiveScore(match);
 });
+const knockoutMatchesLive = mergeManualKnockout(apiKnockoutMatchesLive, manualUpdates.knockout || []);
+
+const apiScorers = buildPlayerRanking(events, "Goal");
+const apiAssists = buildAssistsRanking(events);
+const scorers = mergePlayerStats(baseScorers, apiScorers, manualUpdates.scorers || [], "Buts");
+const assists = mergePlayerStats(baseAssists, apiAssists, manualUpdates.assists || [], "Passes D.");
+const updatedSiteMatches = mergeSiteRows(siteMatches, liveMatches);
 
 await fs.writeFile(OUT_FILE, JSON.stringify({
     updatedAt: new Date().toISOString(),
@@ -122,10 +138,35 @@ await fs.writeFile(KNOCKOUT_OUT_FILE, JSON.stringify({
     matches: knockoutMatchesLive
 }, null, 2), "utf8");
 
+await fs.writeFile(STATS_OUT_FILE, JSON.stringify({
+    updatedAt: new Date().toISOString(),
+    source: events.length ? "api-football-events" : "csv-fallback",
+    scorers,
+    assists
+}, null, 2), "utf8");
+
+await writeCSV(CSV_FILE, ["Date", "Groupe", "Domicile", "Score Domicile", "Score Exterieur", "Exterieur", "Statut"], updatedSiteMatches);
+await writeCSV(SCORERS_CSV_FILE, ["Rang", "Joueurs", "Buts", "Photo"], scorers);
+await writeCSV(ASSISTS_CSV_FILE, ["Rang", "Joueurs", "Passes D.", "Photo"], assists);
+
+console.log(`API-Football: ${fixtures.length} fixture(s) recu(s), ${apiLiveMatches.length} reconnu(s) dans ton calendrier.`);
+if (fixtures.length === 0) {
+    console.log("Aucun match recu: verifie APIFOOTBALL_LEAGUE, APIFOOTBALL_SEASON ou ton abonnement API-Football.");
+} else if (apiLiveMatches.length === 0) {
+    console.log("Aucun match API ne correspond aux equipes/dates de ton CSV. Utilise data/manual_updates.json pour forcer les scores de ton calendrier.");
+    console.log("Exemples API recus:");
+    fixtures.slice(0, 8).forEach(fixture => {
+        console.log(`- ${fixture.fixture?.date || ""} | ${fixture.teams?.home?.name || "?"} - ${fixture.teams?.away?.name || "?"} | ${fixture.fixture?.status?.short || ""}`);
+    });
+}
 console.log(`${liveMatches.length} match(s) calendrier/live ecrit(s) dans data/live_scores.json`);
 console.log(`${knockoutMatchesLive.length} match(s) tableau ecrit(s) dans data/knockout_live.json`);
+console.log(`${events.length} evenement(s), ${scorers.length} buteur(s), ${assists.length} passeur(s) ecrit(s) dans data/live_stats.json`);
+console.log("CSV Resultats / buteurs / passeurs mis a jour sans supprimer les anciennes lignes.");
 
 async function fetchFixtures() {
+    if (!API_KEY) return [];
+
     const urls = [];
 
     if (LEAGUE_ID) {
@@ -151,15 +192,45 @@ async function fetchFixtures() {
     return allFixtures;
 }
 
+async function fetchEvents(fixtures) {
+    const usableFixtures = fixtures
+        .filter(item => item.fixture?.id)
+        .filter(item => ["FT", "AET", "PEN", "1H", "2H", "HT", "ET", "BT", "P"].includes(item.fixture?.status?.short || ""));
+
+    const allEvents = [];
+    for (const fixture of usableFixtures) {
+        const response = await fetch(`${BASE_URL}/events?fixture=${fixture.fixture.id}`, {
+            headers: { "x-apisports-key": API_KEY }
+        });
+
+        if (!response.ok) continue;
+        const payload = await response.json();
+        if (Array.isArray(payload.response)) {
+            payload.response.forEach(event => allEvents.push({ ...event, fixtureId: fixture.fixture.id }));
+        }
+    }
+
+    return allEvents;
+}
+
 async function readSiteMatches() {
     return readCSV(CSV_FILE);
 }
 
 async function readKnockoutMatches() {
-    return readCSV(KNOCKOUT_CSV_FILE).map((match, index) => ({
+    const matches = await readCSV(KNOCKOUT_CSV_FILE);
+    return matches.map((match, index) => ({
         ...match,
         Id: match.Id || match.Numero || match.Match || String(73 + index)
     }));
+}
+
+async function readManualUpdates() {
+    try {
+        return JSON.parse(await fs.readFile(MANUAL_FILE, "utf8"));
+    } catch(error) {
+        return { matches: [], knockout: [], scorers: [], assists: [] };
+    }
 }
 
 async function readCSV(file) {
@@ -179,20 +250,172 @@ async function readCSV(file) {
 function toSiteLiveScore(fixture, siteMatches) {
     const home = translateTeam(fixture.teams?.home?.name || "");
     const away = translateTeam(fixture.teams?.away?.name || "");
-    const siteMatch = findSiteMatch(home, away, siteMatches);
+    const found = findSiteMatch(home, away, siteMatches);
 
-    if (!siteMatch) return null;
+    if (!found) return null;
+
+    const { match: siteMatch, reversed } = found;
+    const scoreHome = scoreValue(fixture.goals?.home);
+    const scoreAway = scoreValue(fixture.goals?.away);
 
     return {
         Date: siteMatch.Date,
         Groupe: siteMatch.Groupe,
         Domicile: siteMatch.Domicile,
         Exterieur: siteMatch.Exterieur,
-        "Score Domicile": scoreValue(fixture.goals?.home),
-        "Score Exterieur": scoreValue(fixture.goals?.away),
+        "Score Domicile": reversed ? scoreAway : scoreHome,
+        "Score Exterieur": reversed ? scoreHome : scoreAway,
         Statut: statusLabel(fixture.fixture?.status?.short || ""),
         Minute: String(fixture.fixture?.status?.elapsed ?? "")
     };
+}
+
+function mergeManualSiteScores(apiMatches, manualMatches, siteMatches) {
+    const map = new Map();
+    apiMatches.forEach(match => map.set(siteMatchKey(match), match));
+
+    manualMatches.forEach(manual => {
+        const siteMatch = findManualSiteMatch(manual, siteMatches);
+        if (!siteMatch) return;
+
+        map.set(siteMatchKey(siteMatch), {
+            Date: siteMatch.Date,
+            Groupe: siteMatch.Groupe,
+            Domicile: siteMatch.Domicile,
+            Exterieur: siteMatch.Exterieur,
+            "Score Domicile": scoreValue(manual.scoreHome ?? manual.score1 ?? manual["Score Domicile"]),
+            "Score Exterieur": scoreValue(manual.scoreAway ?? manual.score2 ?? manual["Score Exterieur"]),
+            Statut: manual.status || manual.Statut || "Termine",
+            Minute: String(manual.minute ?? manual.Minute ?? "")
+        });
+    });
+
+    return [...map.values()];
+}
+
+function mergeManualKnockout(apiMatches, manualMatches) {
+    const map = new Map(apiMatches.map(match => [match.id, match]));
+
+    manualMatches.forEach(manual => {
+        const id = manual.id ? String(manual.id).toUpperCase().replace(/^([^M])/, "M$1") : "";
+        const existing = map.get(id);
+        if (!existing) return;
+
+        const next = {
+            ...existing,
+            score1: scoreValue(manual.score1 ?? manual.scoreHome ?? existing.score1),
+            score2: scoreValue(manual.score2 ?? manual.scoreAway ?? existing.score2),
+            statut: manual.status || manual.statut || existing.statut,
+            minute: String(manual.minute ?? existing.minute ?? ""),
+            winner: manual.winner || existing.winner
+        };
+
+        if (!next.winner) {
+            next.winner = winnerName(next.equipe1, next.equipe2, next.score1, next.score2, next.statut, null);
+        }
+
+        map.set(existing.id, next);
+    });
+
+    return [...map.values()];
+}
+
+function mergePlayerStats(baseRows, apiRows, manualRows, statKey) {
+    const map = new Map();
+
+    baseRows.forEach(row => {
+        const name = row.Joueurs || row.name || row.player;
+        if (!name) return;
+        map.set(normalize(name), { ...row });
+    });
+
+    apiRows.forEach(row => {
+        const name = row.Joueurs || row.name || row.player;
+        if (!name) return;
+        const key = normalize(name);
+        const existing = map.get(key) || {};
+        map.set(key, {
+            ...existing,
+            ...row,
+            Joueurs: name,
+            Photo: row.Photo || existing.Photo || playerPhoto(name),
+            [statKey]: Number(row[statKey] ?? row.value ?? existing[statKey] ?? 0)
+        });
+    });
+
+    manualRows.forEach(row => {
+        const name = row.Joueurs || row.name || row.player;
+        if (!name) return;
+        const key = normalize(name);
+        const existing = map.get(key) || {
+            Rang: 0,
+            Joueurs: name,
+            Equipe: row.Equipe || row.team || "",
+            Photo: row.Photo || playerPhoto(name),
+            [statKey]: 0
+        };
+
+        map.set(key, {
+            ...existing,
+            ...row,
+            Joueurs: name,
+            Photo: row.Photo || existing.Photo || playerPhoto(name),
+            [statKey]: Number(row[statKey] ?? row.value ?? existing[statKey] ?? 0)
+        });
+    });
+
+    return [...map.values()]
+        .sort((a, b) => Number(b[statKey] || 0) - Number(a[statKey] || 0) || a.Joueurs.localeCompare(b.Joueurs, "fr"))
+        .slice(0, 20)
+        .map((row, index) => ({ ...row, Rang: index + 1 }));
+}
+
+function mergeSiteRows(siteMatches, liveMatches) {
+    const liveMap = new Map();
+    liveMatches.forEach(match => liveMap.set(siteMatchKey(match), match));
+
+    return siteMatches.map(match => {
+        const live = liveMap.get(siteMatchKey(match));
+        if (!live) return match;
+
+        return {
+            ...match,
+            "Score Domicile": scoreValue(live["Score Domicile"] ?? match["Score Domicile"]),
+            "Score Exterieur": scoreValue(live["Score Exterieur"] ?? match["Score Exterieur"]),
+            Statut: live.Statut || match.Statut
+        };
+    });
+}
+
+async function writeCSV(file, headers, rows) {
+    const lines = [
+        headers.join(";"),
+        ...rows.map(row => headers.map(header => csvValue(row[header] ?? "")).join(";"))
+    ];
+
+    await fs.writeFile(file, lines.join("\n") + "\n", "utf8");
+}
+
+function csvValue(value) {
+    return String(value ?? "").replace(/\r?\n/g, " ").trim();
+}
+
+function findManualSiteMatch(manual, siteMatches) {
+    return siteMatches.find(match => {
+        if (manual.Date && manual.Date !== match.Date) return false;
+        if (manual.Groupe && manual.Groupe !== match.Groupe) return false;
+        return sameTeam(match.Domicile, manual.home || manual.Domicile || manual.equipe1)
+            && sameTeam(match.Exterieur, manual.away || manual.Exterieur || manual.equipe2);
+    });
+}
+
+function siteMatchKey(match) {
+    return [
+        match.Date || "",
+        match.Groupe || "",
+        match.Domicile || "",
+        match.Exterieur || ""
+    ].map(value => normalize(value)).join("|");
 }
 
 function toKnockoutLiveScore(match, fixture) {
@@ -241,10 +464,19 @@ function baseKnockoutLiveScore(match) {
 }
 
 function findSiteMatch(home, away, siteMatches) {
-    return siteMatches.find(match =>
+    const direct = siteMatches.find(match =>
         sameTeam(match.Domicile, home) &&
         sameTeam(match.Exterieur, away)
     );
+
+    if (direct) return { match: direct, reversed: false };
+
+    const reversed = siteMatches.find(match =>
+        sameTeam(match.Domicile, away) &&
+        sameTeam(match.Exterieur, home)
+    );
+
+    return reversed ? { match: reversed, reversed: true } : null;
 }
 
 function findFixtureForKnockout(match, fixtures) {
@@ -252,8 +484,14 @@ function findFixtureForKnockout(match, fixtures) {
     const away = match.Equipe2 || "";
 
     const byTeams = fixtures.find(fixture =>
-        sameTeam(translateTeam(fixture.teams?.home?.name || ""), home) &&
-        sameTeam(translateTeam(fixture.teams?.away?.name || ""), away)
+        (
+            sameTeam(translateTeam(fixture.teams?.home?.name || ""), home) &&
+            sameTeam(translateTeam(fixture.teams?.away?.name || ""), away)
+        ) ||
+        (
+            sameTeam(translateTeam(fixture.teams?.home?.name || ""), away) &&
+            sameTeam(translateTeam(fixture.teams?.away?.name || ""), home)
+        )
     );
 
     if (byTeams) return byTeams;
@@ -311,6 +549,60 @@ function flagFor(team) {
     return flagCodes[normalize(team)] || "";
 }
 
+function buildPlayerRanking(events, detailType) {
+    const map = new Map();
+
+    events
+        .filter(event => event.type === detailType || event.detail === detailType || (detailType === "Goal" && event.type === "Goal"))
+        .filter(event => event.player?.name)
+        .forEach(event => {
+            const key = normalize(event.player.name);
+            const current = map.get(key) || {
+                Rang: 0,
+                Joueurs: event.player.name,
+                Equipe: translateTeam(event.team?.name || ""),
+                Photo: playerPhoto(event.player.name),
+                Buts: 0
+            };
+            current.Buts += 1;
+            map.set(key, current);
+        });
+
+    return [...map.values()]
+        .sort((a, b) => b.Buts - a.Buts || a.Joueurs.localeCompare(b.Joueurs, "fr"))
+        .slice(0, 20)
+        .map((player, index) => ({ ...player, Rang: index + 1 }));
+}
+
+function buildAssistsRanking(events) {
+    const map = new Map();
+
+    events
+        .filter(event => event.type === "Goal")
+        .filter(event => event.assist?.name)
+        .forEach(event => {
+            const key = normalize(event.assist.name);
+            const current = map.get(key) || {
+                Rang: 0,
+                Joueurs: event.assist.name,
+                Equipe: translateTeam(event.team?.name || ""),
+                Photo: playerPhoto(event.assist.name),
+                "Passes D.": 0
+            };
+            current["Passes D."] += 1;
+            map.set(key, current);
+        });
+
+    return [...map.values()]
+        .sort((a, b) => b["Passes D."] - a["Passes D."] || a.Joueurs.localeCompare(b.Joueurs, "fr"))
+        .slice(0, 20)
+        .map((player, index) => ({ ...player, Rang: index + 1 }));
+}
+
+function playerPhoto(name) {
+    return `${normalize(name)}.png`;
+}
+
 function sameTeam(left, right) {
     const normalizedLeft = normalize(left);
     const normalizedRight = normalize(right);
@@ -329,8 +621,13 @@ function normalize(value) {
 function fixEncoding(text) {
     return text
         .replace(/^\uFEFF/, "")
-        .replace(/Ã©/g, "e").replace(/Ã¨/g, "e").replace(/Ãª/g, "e").replace(/Ã«/g, "e")
-        .replace(/Ã /g, "a").replace(/Ã¢/g, "a").replace(/Ã®/g, "i").replace(/Ã¯/g, "i")
-        .replace(/Ã´/g, "o").replace(/Ã¶/g, "o").replace(/Ã»/g, "u").replace(/Ã¹/g, "u")
-        .replace(/Ã§/g, "c").replace(/Ã‰/g, "E").replace(/Ã/g, "E").replace(/Ã/g, "E");
+        .replace(/Ãƒâ€°|ÃƒÂ‰|Ã‰/g, "É")
+        .replace(/ÃƒÂ©|Ã©/g, "é").replace(/ÃƒÂ¨|Ã¨/g, "è").replace(/ÃƒÂª|Ãª/g, "ê").replace(/ÃƒÂ«|Ã«/g, "ë")
+        .replace(/ÃƒÂ­|Ã­/g, "í").replace(/ÃƒÂ¡|Ã¡/g, "á").replace(/ÃƒÂ£|Ã£/g, "ã")
+        .replace(/Ãƒ |Ã /g, "à").replace(/ÃƒÂ¢|Ã¢/g, "â").replace(/ÃƒÂ®|Ã®/g, "î").replace(/ÃƒÂ¯|Ã¯/g, "ï")
+        .replace(/ÃƒÂ´|Ã´/g, "ô").replace(/ÃƒÂ¶|Ã¶/g, "ö").replace(/ÃƒÂ»|Ã»/g, "û").replace(/ÃƒÂ¹|Ã¹/g, "ù")
+        .replace(/ÃƒÂ§|Ã§/g, "ç")
+        .replace(/Ã©/g, "é").replace(/Ã¨/g, "è").replace(/Ãª/g, "ê").replace(/Ã«/g, "ë")
+        .replace(/Ã­/g, "í").replace(/Ã¡/g, "á").replace(/Ã£/g, "ã")
+        .replace(/Ã´/g, "ô").replace(/Ã¹/g, "ù").replace(/Ã§/g, "ç").replace(/Ã‰/g, "É");
 }

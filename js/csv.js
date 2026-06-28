@@ -33,15 +33,45 @@ class MatchManager {
     }
 
     async loadMatches() {
-        const response = await fetch("data/Resultats_Coupe_du_Monde.csv?t=" + Date.now(), { cache: "no-store" });
+        const [groupMatches, knockoutMatches, live] = await Promise.all([
+            this.loadCSV("data/Resultats_Coupe_du_Monde.csv"),
+            this.loadKnockoutMatches(),
+            this.loadLiveScores()
+        ]);
+
+        return this.sortMatchesForHome(this.mergeLiveScores([...groupMatches, ...knockoutMatches], live.matches || []));
+    }
+
+    async loadCSV(path) {
+        const response = await fetch(path + "?t=" + Date.now(), { cache: "no-store" });
         if (!response.ok) throw new Error("Impossible de charger le fichier CSV.");
 
         const buffer = await response.arrayBuffer();
         const csv = this.fixEncoding(new TextDecoder("utf-8").decode(buffer));
-        const matches = this.parseCSV(csv);
-        const live = await this.loadLiveScores();
+        return this.parseCSV(csv);
+    }
 
-        return this.mergeLiveScores(matches, live.matches || []);
+    async loadKnockoutMatches() {
+        try {
+            const [csvMatches, live] = await Promise.all([
+                this.loadCSV("data/Matchs_16es_Coupe_du_Monde_2026.csv"),
+                this.loadKnockoutLive()
+            ]);
+            this._knockoutIndex = 0;
+            return this.mergeKnockoutLive(csvMatches.map(match => this.normalizeKnockoutMatch(match)), live.matches || []);
+        } catch (error) {
+            return [];
+        }
+    }
+
+    async loadKnockoutLive() {
+        try {
+            const response = await fetch("data/knockout_live.json?t=" + Date.now(), { cache: "no-store" });
+            if (!response.ok) return { matches: [] };
+            return await response.json();
+        } catch (error) {
+            return { matches: [] };
+        }
     }
 
     async loadLiveScores() {
@@ -71,6 +101,56 @@ class MatchManager {
                 "_liveUpdated": "1"
             };
         });
+    }
+
+    mergeKnockoutLive(matches, liveMatches) {
+        const liveMap = new Map();
+        liveMatches.forEach(match => {
+            if(match.id) liveMap.set(String(match.id), match);
+            liveMap.set(this.knockoutKey(match.date, match.equipe1, match.equipe2), match);
+        });
+
+        return matches.map(match => {
+            const live = liveMap.get(match._knockoutId) || liveMap.get(this.knockoutKey(match._rawDate, match.Domicile, match.Exterieur));
+            if(!live) return match;
+
+            return {
+                ...match,
+                Date: this.displayDate(live.date || match._rawDate),
+                Domicile: live.equipe1 || match.Domicile,
+                Exterieur: live.equipe2 || match.Exterieur,
+                "Score Domicile": live.score1 ?? match["Score Domicile"],
+                "Score Exterieur": live.score2 ?? match["Score Exterieur"],
+                "Statut": live.statut || match.Statut,
+                "Minute": live.minute || "",
+                Diffuseur: live.diffuseur || match.Diffuseur || "",
+                "Drapeau Domicile": live.drapeau1 || match["Drapeau Domicile"],
+                "Drapeau Exterieur": live.drapeau2 || match["Drapeau Exterieur"]
+            };
+        });
+    }
+
+    normalizeKnockoutMatch(match) {
+        const index = this._knockoutIndex || 0;
+        this._knockoutIndex = index + 1;
+
+        return {
+            Date: this.displayDate(match.Date),
+            Groupe: "16e de finale",
+            Domicile: match.Equipe1 || match["Équipe1"] || "",
+            "Score Domicile": match.Score1 || "",
+            "Score Exterieur": match.Score2 || "",
+            Exterieur: match.Equipe2 || match["Équipe2"] || "",
+            Statut: match.Statut || "À venir",
+            Heure: match.Heure || "",
+            Diffuseur: match.Diffuseur || "",
+            "Drapeau Domicile": match.Drapeau1 || "",
+            "Drapeau Exterieur": match.Drapeau2 || "",
+            _rawDate: match.Date || "",
+            _sortDate: this.sortDateValue(match.Date),
+            _knockoutId: "M" + (73 + index),
+            _isKnockout: "1"
+        };
     }
 
     fixEncoding(text) {
@@ -123,6 +203,24 @@ class MatchManager {
             return;
         }
 
+        if (this.activeFilter === "all" && this.searchTerm === "") {
+            const upcoming = this.sortUpcomingMatches(matches.filter(match => this.statusKey(match) !== "done"));
+            const finished = this.sortFinishedMatches(matches.filter(match => this.statusKey(match) === "done"));
+
+            if (upcoming.length) {
+                this.container.insertAdjacentHTML("beforeend", `<h3 class="matches-section-title">Matchs à suivre</h3>`);
+                upcoming.forEach((match, index) => this.container.insertAdjacentHTML("beforeend", this.createCard(match, index)));
+            }
+
+            if (finished.length) {
+                this.container.insertAdjacentHTML("beforeend", `<h3 class="matches-section-title">Matchs terminés</h3>`);
+                finished.forEach((match, index) => this.container.insertAdjacentHTML("beforeend", this.createCard(match, index)));
+            }
+
+            document.dispatchEvent(new Event("matches:updated"));
+            return;
+        }
+
         matches.forEach((match, index) => {
             this.container.insertAdjacentHTML("beforeend", this.createCard(match, index));
         });
@@ -143,7 +241,7 @@ class MatchManager {
 
     <div class="teams">
         <div class="team ${this.isWinner(match, "home") ? "winner" : ""}">
-            <img src="assets/flags/${this.flag(match["Domicile"])}" alt="${match["Domicile"]}">
+            <img src="assets/flags/${this.flag(match["Domicile"], match["Drapeau Domicile"])}" alt="${match["Domicile"]}">
             <h3>${this.shortName(match["Domicile"])}</h3>
         </div>
 
@@ -152,7 +250,7 @@ class MatchManager {
         </div>
 
         <div class="team ${this.isWinner(match, "away") ? "winner" : ""}">
-            <img src="assets/flags/${this.flag(match["Exterieur"])}" alt="${match["Exterieur"]}">
+            <img src="assets/flags/${this.flag(match["Exterieur"], match["Drapeau Exterieur"])}" alt="${match["Exterieur"]}">
             <h3>${this.shortName(match["Exterieur"])}</h3>
         </div>
     </div>
@@ -197,12 +295,16 @@ class MatchManager {
             const matchesSearch = this.searchTerm === "" || teams.includes(this.searchTerm);
 
             if (!matchesSearch) return false;
-            if (this.activeFilter === "today") return match["Date"] === today;
+            if (this.activeFilter === "today") return (match["Date"] === today && this.isActuallyUpcoming(match)) || this.statusKey(match) === "live" || match._liveUpdated;
             if (this.activeFilter === "france") return [match["Domicile"], match["Exterieur"]].includes("France");
             if (this.activeFilter === "upcoming") return status === "upcoming" || status === "live";
             if (this.activeFilter === "done") return status === "done";
 
             return true;
+        }).sort((a, b) => {
+            if (this.activeFilter === "upcoming") return this.matchDateTimeValue(a) - this.matchDateTimeValue(b);
+            if (this.activeFilter === "done") return this.matchDateTimeValue(b) - this.matchDateTimeValue(a);
+            return 0;
         });
     }
 
@@ -210,11 +312,22 @@ class MatchManager {
         if (!this.todayContainer) return;
 
         const today = this.todayKey();
-        let matches = this.matches.filter(match => match["Date"] === today);
+        const liveUpdatedMatches = this.matches.filter(match => match._liveUpdated);
+        let matches = this.sortMatchesByTime(this.matches.filter(match => match["Date"] === today && this.isActuallyUpcoming(match)));
         let title = "Matchs du jour";
 
+        if (liveUpdatedMatches.length > 0) {
+            const seen = new Set();
+            matches = this.sortMatchesByTime([...liveUpdatedMatches, ...matches].filter(match => {
+                const key = this.matchKey(match);
+                if(seen.has(key)) return false;
+                seen.add(key);
+                return true;
+            }));
+        }
+
         if (matches.length === 0) {
-            matches = this.matches.filter(match => this.statusKey(match) === "upcoming").slice(0, 3);
+            matches = this.getNextUpcomingMatches(3);
             title = "Prochains matchs";
         }
 
@@ -237,17 +350,19 @@ class MatchManager {
     </div>
 
     <div class="today-teams">
-        ${this.compactTeam(match["Domicile"], match["Score Domicile"], this.isWinner(match, "home"))}
-        <span class="today-separator">-</span>
-        ${this.compactTeam(match["Exterieur"], match["Score Exterieur"], this.isWinner(match, "away"))}
+        ${this.compactTeam(match["Domicile"], match["Score Domicile"], this.isWinner(match, "home"), match["Drapeau Domicile"])}
+        <span class="today-separator">${this.matchCenterText(match)}</span>
+        ${this.compactTeam(match["Exterieur"], match["Score Exterieur"], this.isWinner(match, "away"), match["Drapeau Exterieur"])}
     </div>
+
+    ${match.Diffuseur ? `<div class="today-broadcaster">${match.Diffuseur}</div>` : ""}
 </article>`;
     }
 
-    compactTeam(country, score, winner) {
+    compactTeam(country, score, winner, providedFlag = "") {
         return `
 <div class="today-team ${winner ? "winner" : ""}">
-    <img src="assets/flags/${this.flag(country)}" alt="${country}">
+    <img src="assets/flags/${this.flag(country, providedFlag)}" alt="${country}">
     <strong>${this.shortName(country)}</strong>
     <span>${score || ""}</span>
 </div>`;
@@ -308,6 +423,14 @@ class MatchManager {
         return `${home || "-"} - ${away || "-"}`;
     }
 
+    matchCenterText(match) {
+        const home = match["Score Domicile"];
+        const away = match["Score Exterieur"];
+
+        if (home !== "" || away !== "") return `${home || "-"} - ${away || "-"}`;
+        return this.formatHour(match.Heure) || "vs";
+    }
+
     normalizeText(text) {
         return (text || "")
             .toString()
@@ -347,6 +470,115 @@ class MatchManager {
         return `${date.getDate()}-${months[date.getMonth()]}`;
     }
 
+    sortMatchesByRecentFirst(matches) {
+        return this.sortFinishedMatches(matches);
+    }
+
+    sortMatchesForHome(matches) {
+        const upcoming = this.sortUpcomingMatches(matches.filter(match => this.statusKey(match) !== "done"));
+        const finished = this.sortFinishedMatches(matches.filter(match => this.statusKey(match) === "done"));
+        return [...upcoming, ...finished];
+    }
+
+    sortUpcomingMatches(matches) {
+        return [...matches].sort((a, b) => this.matchDateTimeValue(a) - this.matchDateTimeValue(b));
+    }
+
+    sortFinishedMatches(matches) {
+        return [...matches].sort((a, b) => this.matchDateTimeValue(b) - this.matchDateTimeValue(a));
+    }
+
+    matchDateTimeValue(match) {
+        return this.sortDateValue(match._rawDate || match.Date) + this.timeValue(match.Heure) * 60000;
+    }
+
+    sortMatchesByTime(matches) {
+        return [...matches].sort((a, b) => this.timeValue(a.Heure) - this.timeValue(b.Heure));
+    }
+
+    getNextUpcomingMatches(limit) {
+        const now = new Date();
+        return this.matches
+            .filter(match => this.isActuallyUpcoming(match))
+            .sort((a, b) => {
+                const dateDiff = this.sortDateValue(a._rawDate || a.Date) - this.sortDateValue(b._rawDate || b.Date);
+                if (dateDiff !== 0) return dateDiff;
+                return this.timeValue(a.Heure) - this.timeValue(b.Heure);
+            })
+            .filter(match => this.sortDateValue(match._rawDate || match.Date) >= new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime())
+            .slice(0, limit);
+    }
+
+    isActuallyUpcoming(match) {
+        const status = this.statusKey(match);
+        if (status === "live") return true;
+        if (status === "done") return false;
+
+        const value = this.matchDateTimeValue(match);
+        if (!value) return true;
+
+        return value >= Date.now();
+    }
+
+    sortDateValue(value) {
+        const text = (value || "").toString().trim();
+        const fullDate = text.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
+
+        if (fullDate) {
+            return new Date(Number(fullDate[3]), Number(fullDate[2]) - 1, Number(fullDate[1])).getTime();
+        }
+
+        const compactDate = text.match(/^(\d{1,2})-([a-zéèêûôîïç]+)/i);
+
+        if (compactDate) {
+            const months = {
+                janv: 0,
+                fevr: 1,
+                févr: 1,
+                mars: 2,
+                avr: 3,
+                mai: 4,
+                juin: 5,
+                juil: 6,
+                aout: 7,
+                août: 7,
+                sept: 8,
+                oct: 9,
+                nov: 10,
+                dec: 11,
+                déc: 11
+            };
+            const monthKey = this.normalizeText(compactDate[2]);
+            return new Date(2026, months[monthKey] ?? 0, Number(compactDate[1])).getTime();
+        }
+
+        return 0;
+    }
+
+    timeValue(value) {
+        const match = (value || "").toString().match(/^(\d{1,2}):(\d{2})$/);
+        if (!match) return 0;
+        return Number(match[1]) * 60 + Number(match[2]);
+    }
+
+    formatHour(value) {
+        const match = (value || "").toString().match(/^(\d{1,2}):(\d{2})$/);
+        if (!match) return value || "";
+        return `${Number(match[1])}h${match[2]}`;
+    }
+
+    displayDate(value) {
+        const match = (value || "").toString().match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
+        if (!match) return value || "";
+
+        const months = ["janv", "févr", "mars", "avr", "mai", "juin", "juil", "août", "sept", "oct", "nov", "déc"];
+        return `${Number(match[1])}-${months[Number(match[2]) - 1]}`;
+    }
+
+    knockoutKey(date, home, away) {
+        return [date || "", home || "", away || ""].map(value => this.normalizeText(value)).join("|");
+    }
+
     matchKey(match) {
         return [
             match.Date || match.date || "",
@@ -369,7 +601,9 @@ class MatchManager {
         return names[country] || country;
     }
 
-    flag(country) {
+    flag(country, providedFlag = "") {
+        if (providedFlag) return providedFlag.includes(".") ? providedFlag : providedFlag + ".png";
+
         const flags = {
             "Afghanistan": "af",
             "Afrique du Sud": "za",

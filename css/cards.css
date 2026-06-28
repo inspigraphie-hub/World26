@@ -118,8 +118,23 @@ MATCHS DU JOUR
 }
 
 .today-separator{
-    color:#999;
+    min-width:52px;
+    padding:7px 8px;
+    border-radius:999px;
+    background:#111;
+    color:#fff;
+    font-size:13px;
     font-weight:900;
+    text-align:center;
+    white-space:nowrap;
+}
+
+.today-broadcaster{
+    margin-top:12px;
+    color:#666;
+    font-size:12px;
+    font-weight:800;
+    text-align:center;
 }
 
 .empty-state{
@@ -1121,6 +1136,17 @@ TABLEAU FINAL
     text-align:center;
 }
 
+.bracket-status{
+    display:inline-flex;
+    margin-left:5px;
+    padding:3px 7px;
+    border-radius:999px;
+    background:#f0f0f0;
+    color:#111;
+    font-size:10px;
+    font-weight:900;
+}
+
 .bracket-team{
     display:grid;
     grid-template-columns:30px minmax(0,1fr) 38px;
@@ -1300,42 +1326,6 @@ FAN HUB
     border-radius:22px;
     padding:20px;
     box-shadow:0 16px 36px rgba(0,0,0,.08);
-}
-
-.prono-teaser{
-    display:grid;
-    gap:12px;
-    text-decoration:none;
-    background:#111;
-    color:#fff;
-    border-color:#111;
-    overflow:hidden;
-}
-
-.prono-teaser .section-kicker{
-    color:#066af6;
-}
-
-.prono-teaser p{
-    max-width:520px;
-    color:rgba(255,255,255,.76);
-    font-size:14px;
-    font-weight:700;
-    line-height:1.45;
-}
-
-.prono-teaser strong{
-    display:inline-flex;
-    align-items:center;
-    justify-content:center;
-    gap:9px;
-    width:max-content;
-    padding:11px 15px;
-    border-radius:999px;
-    background:#066af6;
-    color:#fff;
-    font-size:13px;
-    font-weight:900;
 }
 
 .fan-panel h2,
@@ -1586,8 +1576,7 @@ FAN HUB
     outline:0;
 }
 
-.share-match,
-.prono-match-link{
+.share-match{
     display:inline-flex;
     align-items:center;
     justify-content:center;
@@ -1601,12 +1590,6 @@ FAN HUB
     font-size:12px;
     font-weight:900;
     cursor:pointer;
-}
-
-.prono-match-link{
-    text-decoration:none;
-    background:#066af6;
-    color:#fff;
 }
 
 @media(max-width:700px){
@@ -1880,4 +1863,17 @@ FAN HUB
     .quick-ranking-card{
         flex-basis:238px;
     }
+}
+
+
+.matches-section-title{
+    margin:34px 0 18px;
+    font-size:clamp(1.3rem,2vw,2rem);
+    font-weight:900;
+    color:#111;
+    letter-spacing:-.03em;
+}
+
+.matches-section-title:first-child{
+    margin-top:0;
 }

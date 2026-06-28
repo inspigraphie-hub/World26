@@ -1,4 +1,4 @@
-﻿Date;Groupe;Domicile;Score Domicile;Score Exterieur;Exterieur;Statut
+Date;Groupe;Domicile;Score Domicile;Score Exterieur;Exterieur;Statut
 11-juin;Groupe A;Mexique;2;0;Afrique du Sud;Terminé
 12-juin;Groupe A;Corée du Sud;2;1;Tchéquie;Terminé
 12-juin;Groupe B;Canada;1;1;Bosnie-Herzégovine;Terminé
@@ -67,7 +67,7 @@
 27-juin;Groupe G;Égypte;1;1;Iran;Terminé
 27-juin;Groupe L;Panama;0;2;Angleterre;Terminé
 27-juin;Groupe L;Croatie;2;1;Ghana;Terminé
-28-juin;Groupe K;Colombie;; ;Portugal;À venir
-28-juin;Groupe K;RD Congo;; ;Ouzbékistan;À venir
-28-juin;Groupe J;Algérie;; ;Autriche;À venir
-28-juin;Groupe J;Jordanie;; ;Argentine;À venir
+28-juin;Groupe K;Colombie;0;0;Portugal;Termine
+28-juin;Groupe K;RD Congo;3;1;Ouzbékistan;Termine
+28-juin;Groupe J;Algérie;3;3;Autriche;Termine
+28-juin;Groupe J;Jordanie;1;3;Argentine;Termine
