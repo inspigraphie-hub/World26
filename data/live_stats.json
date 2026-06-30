@@ -1,0 +1,68 @@
+{
+  "updatedAt": "2026-06-30T19:58:58.548Z",
+  "source": "manual-ranking-update",
+  "scorers": [
+    {
+      "Rang": 1,
+      "Joueurs": "Lionel Messi",
+      "Buts": 6,
+      "Photo": "messi.png"
+    },
+    {
+      "Rang": 2,
+      "Joueurs": "Erling Haaland",
+      "Buts": 5,
+      "Photo": "haaland.png"
+    },
+    {
+      "Rang": 3,
+      "Joueurs": "Kylian Mbappé",
+      "Buts": 4,
+      "Photo": "mbappe.png"
+    },
+    {
+      "Rang": 4,
+      "Joueurs": "Ousmane Dembélé",
+      "Buts": 4,
+      "Photo": "dembele.png"
+    },
+    {
+      "Rang": 5,
+      "Joueurs": "Vinícius Júnior",
+      "Buts": 4,
+      "Photo": "vinicius.png"
+    }
+  ],
+  "assists": [
+    {
+      "Rang": 1,
+      "Joueurs": "Bruno Guimarães",
+      "Passes D.": 4,
+      "Photo": "guimaraes.png"
+    },
+    {
+      "Rang": 2,
+      "Joueurs": "Alexander Isak",
+      "Passes D.": 3,
+      "Photo": "isak.png"
+    },
+    {
+      "Rang": 3,
+      "Joueurs": "Michael Olise",
+      "Passes D.": 3,
+      "Photo": "olise.png"
+    },
+    {
+      "Rang": 4,
+      "Joueurs": "Brahim Díaz",
+      "Passes D.": 2,
+      "Photo": "diaz.png"
+    },
+    {
+      "Rang": 5,
+      "Joueurs": "Breel Embolo",
+      "Passes D.": 2,
+      "Photo": "embolo.png"
+    }
+  ]
+}
