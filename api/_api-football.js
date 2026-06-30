@@ -6,6 +6,7 @@ const BASE_URL = "https://v3.football.api-sports.io/fixtures";
 const FIXTURE_CACHE_MS = Number(process.env.APIFOOTBALL_CACHE_MS || 60000);
 
 let fixtureCache = {};
+let lastFixtureDiagnostics = [];
 
 const aliases = {
     "Algeria": "Algérie",
@@ -112,7 +113,10 @@ async function fetchFixtures(options = {}) {
 
     const cacheKey = options.includeCompetitionFixtures ? "competition" : "live";
     const now = Date.now();
-    if (fixtureCache[cacheKey]?.expiresAt > now) return fixtureCache[cacheKey].fixtures;
+    if (fixtureCache[cacheKey]?.expiresAt > now) {
+        lastFixtureDiagnostics = fixtureCache[cacheKey].diagnostics || [];
+        return fixtureCache[cacheKey].fixtures;
+    }
 
     const league = process.env.APIFOOTBALL_LEAGUE || process.env.APIFOOTBALL_LEAGUE_ID || "1";
     const season = process.env.APIFOOTBALL_SEASON || "2026";
@@ -142,6 +146,7 @@ async function fetchFixtures(options = {}) {
 
     const fixtures = [];
     const seen = new Set();
+    const diagnostics = [];
 
     for (const url of urls) {
         const response = await fetch(url, {
@@ -154,6 +159,11 @@ async function fetchFixtures(options = {}) {
 
         const payload = await response.json();
         const rows = Array.isArray(payload.response) ? payload.response : [];
+        diagnostics.push({
+            query: publicFixtureQuery(url),
+            count: rows.length,
+            errors: payload.errors || null
+        });
 
         rows.forEach(fixture => {
             const id = fixture.fixture?.id || `${fixture.fixture?.date || ""}-${fixture.teams?.home?.name || ""}-${fixture.teams?.away?.name || ""}`;
@@ -165,10 +175,26 @@ async function fetchFixtures(options = {}) {
 
     fixtureCache[cacheKey] = {
         expiresAt: now + FIXTURE_CACHE_MS,
-        fixtures
+        fixtures,
+        diagnostics
     };
 
+    lastFixtureDiagnostics = diagnostics;
+
     return fixtures;
+}
+
+function publicFixtureQuery(url) {
+    try {
+        const parsed = new URL(url);
+        return parsed.search.replace(/^\?/, "");
+    } catch (error) {
+        return "";
+    }
+}
+
+function fixtureDiagnostics() {
+    return lastFixtureDiagnostics;
 }
 
 function apiConfigInfo() {
@@ -203,6 +229,7 @@ function toSiteLiveScores(fixtures) {
         matchedCount: mapped.length,
         mode: "live",
         apiConfig: apiConfigInfo(),
+        apiDiagnostics: fixtureDiagnostics(),
         matches: mapped
     };
 }
@@ -223,6 +250,7 @@ function toKnockoutLiveScores(fixtures) {
         matchedCount: matches.filter(match => match.apiFixtureId).length,
         mode: "competition",
         apiConfig: apiConfigInfo(),
+        apiDiagnostics: fixtureDiagnostics(),
         matches
     };
 }
@@ -422,6 +450,7 @@ module.exports = {
     apiConfigInfo,
     knockoutFixtureIds,
     knockoutFixtureDates,
+    fixtureDiagnostics,
     readJSON,
     safeReadJSON,
     toKnockoutLiveScores,
