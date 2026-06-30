@@ -1,0 +1,87 @@
+{
+  "updatedAt": "2026-06-30T21:55:13.820Z",
+  "bestAttack": [
+    {
+      "rank": 1,
+      "team": "Pays-Bas",
+      "penalties": 0,
+      "goalsPerMatch": "2,75",
+      "played": 4,
+      "goals": 11
+    },
+    {
+      "rank": 2,
+      "team": "Allemagne",
+      "penalties": 1,
+      "goalsPerMatch": "2,75",
+      "played": 4,
+      "goals": 11
+    },
+    {
+      "rank": 3,
+      "team": "France",
+      "penalties": 0,
+      "goalsPerMatch": "3,33",
+      "played": 3,
+      "goals": 10
+    },
+    {
+      "rank": 4,
+      "team": "Brésil",
+      "penalties": 0,
+      "goalsPerMatch": "2,25",
+      "played": 4,
+      "goals": 9
+    },
+    {
+      "rank": 5,
+      "team": "Canada",
+      "penalties": 0,
+      "goalsPerMatch": "2,25",
+      "played": 4,
+      "goals": 9
+    }
+  ],
+  "bestDefense": [
+    {
+      "rank": 1,
+      "team": "Espagne",
+      "penalties": 0,
+      "goalsPerMatch": "0",
+      "played": 3,
+      "goals": 0
+    },
+    {
+      "rank": 2,
+      "team": "Mexique",
+      "penalties": 0,
+      "goalsPerMatch": "0",
+      "played": 3,
+      "goals": 0
+    },
+    {
+      "rank": 3,
+      "team": "Argentine",
+      "penalties": 0,
+      "goalsPerMatch": "0,33",
+      "played": 3,
+      "goals": 1
+    },
+    {
+      "rank": 4,
+      "team": "Brésil",
+      "penalties": 0,
+      "goalsPerMatch": "0,33",
+      "played": 3,
+      "goals": 1
+    },
+    {
+      "rank": 5,
+      "team": "Colombie",
+      "penalties": 0,
+      "goalsPerMatch": "0,33",
+      "played": 3,
+      "goals": 1
+    }
+  ]
+}

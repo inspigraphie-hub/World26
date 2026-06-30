@@ -4,6 +4,7 @@ class FanExperience {
         this.scorers = [];
         this.assists = [];
         this.standings = [];
+        this.quickRankings = { bestAttack: [], bestDefense: [] };
         this.favoriteKey = "worldcupFavoriteTeam";
         this.predictionKey = "worldcupPredictions";
     }
@@ -17,12 +18,14 @@ class FanExperience {
                 this.loadCSV("data/Classement.csv"),
                 this.loadLiveScores(),
                 this.loadLiveStats(),
-                this.loadKnockoutMatches()
+                this.loadKnockoutMatches(),
+                this.loadQuickRankings()
             ]);
             this.matches = this.sortUpcomingFirst(this.mergeLiveScores([...data[0], ...data[6]], data[4].matches || []));
             this.scorers = this.mergePlayers(data[1], data[5].scorers || [], "Buts");
             this.assists = this.mergePlayers(data[2], data[5].assists || [], "Passes D.");
             this.standings = this.buildStandingsFromMatches(this.matches, data[3]);
+            this.quickRankings = data[7] || this.quickRankings;
 
             this.renderPulse();
             this.renderCountdown();
@@ -65,6 +68,16 @@ class FanExperience {
             return await response.json();
         } catch(error) {
             return { scorers: [], assists: [] };
+        }
+    }
+
+    async loadQuickRankings() {
+        try {
+            const response = await fetch("data/quick_rankings.json?t=" + Date.now(), { cache: "no-store" });
+            if(!response.ok) return { bestAttack: [], bestDefense: [] };
+            return await response.json();
+        } catch(error) {
+            return { bestAttack: [], bestDefense: [] };
         }
     }
 
@@ -265,13 +278,15 @@ class FanExperience {
         if(!grid) return;
         const attacks = [...this.standings].sort((a,b) => Number(b.Bp || 0) - Number(a.Bp || 0));
         const defenses = [...this.standings].sort((a,b) => Number(a.Bc || 99) - Number(b.Bc || 99));
+        const quickAttack = (this.quickRankings.bestAttack || []).map(row => ({ label: row.team, value: row.goals + " buts" }));
+        const quickDefense = (this.quickRankings.bestDefense || []).map(row => ({ label: row.team, value: row.goals + " encaiss." }));
         const qualified = this.standings.filter(team => Number(team.Pts || 0) >= 6).slice(0, 6);
         const upcoming = this.matches.filter(match => this.statusKey(match) !== "done").slice(0, 4);
         grid.innerHTML = [
             this.rankingCard("Top buteurs", "fa-futbol", "green", this.scorers.slice(0, 5).map(player => ({ label: player.Joueurs, value: player.Buts + " buts" }))),
             this.rankingCard("Top passeurs", "fa-wand-magic-sparkles", "cyan", this.assists.slice(0, 5).map(player => ({ label: player.Joueurs, value: player["Passes D."] + " passes" }))),
-            this.rankingCard("Meilleures attaques", "fa-bolt", "red", attacks.slice(0, 5).map(team => ({ label: team["Équipe"], value: team.Bp + " BP" }))),
-            this.rankingCard("Meilleures défenses", "fa-shield-halved", "purple", defenses.slice(0, 5).map(team => ({ label: team["Équipe"], value: team.Bc + " BC" }))),
+            this.rankingCard("Meilleures attaques", "fa-bolt", "red", quickAttack.length ? quickAttack : attacks.slice(0, 5).map(team => ({ label: team["Ã‰quipe"], value: team.Bp + " BP" }))),
+            this.rankingCard("Meilleures défenses", "fa-shield-halved", "purple", quickDefense.length ? quickDefense : defenses.slice(0, 5).map(team => ({ label: team["Ã‰quipe"], value: team.Bc + " BC" }))),
             this.rankingCard("Équipes en forme", "fa-trophy", "gold", qualified.map(team => ({ label: team["Équipe"], value: team.Pts + " pts" }))),
             this.rankingCard("Prochains gros matchs", "fa-calendar-days", "dark", upcoming.map(match => ({ label: match.Domicile + " - " + match.Exterieur, value: match.Date })))
         ].join("");

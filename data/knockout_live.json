@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-06-30T19:58:58.546Z",
+  "updatedAt": "2026-06-30T21:46:28.182Z",
   "source": "manual-16es-results",
   "matches": [
     {
@@ -174,12 +174,12 @@
       "equipe2": "Norvège",
       "drapeau1": "ci.png",
       "drapeau2": "no.png",
-      "score1": "",
-      "score2": "",
+      "score1": "1",
+      "score2": "2",
       "diffuseur": "M6, beIN Sports 1",
-      "statut": "À venir",
+      "statut": "Terminé",
       "minute": "",
-      "winner": "",
+      "winner": "Norvège",
       "apiFixtureId": ""
     },
     {
