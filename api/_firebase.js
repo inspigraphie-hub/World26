@@ -77,6 +77,11 @@ function mergeMatches(baseMatches, storedMatches, options = {}) {
         const merged = { ...match, ...stored };
         if (!options.preferBaseValues) return merged;
 
+        const hasManualScore = Boolean(match.score1 || match.score2 || match["Score Domicile"] || match["Score Exterieur"]);
+        const hasManualWinner = Boolean(match.winner || match.Vainqueur || match.Winner);
+        const isManuallyFinished = String(match.statut || match.Statut || "").toLowerCase().includes("termin");
+        if (!hasManualScore && !hasManualWinner && !isManuallyFinished) return merged;
+
         Object.entries(match).forEach(([key, value]) => {
             if (value !== "" && value !== null && value !== undefined) {
                 merged[key] = value;

@@ -1,4 +1,4 @@
-const { apiConfigInfo, fetchFixtures, knockoutFixtureIds, safeReadJSON, toKnockoutLiveScores } = require("./_api-football");
+const { apiConfigInfo, fetchFixtures, knockoutFixtureDates, knockoutFixtureIds, safeReadJSON, toKnockoutLiveScores } = require("./_api-football");
 const { mergeMatches, readMatches, saveMatches } = require("./_firebase");
 
 const EMPTY_KNOCKOUT = {
@@ -22,7 +22,8 @@ module.exports = async function handler(req, res) {
 
         const fixtures = await fetchFixtures({
             includeCompetitionFixtures: true,
-            fixtureIds: knockoutFixtureIds()
+            fixtureIds: knockoutFixtureIds(),
+            dates: knockoutFixtureDates()
         });
         const data = toKnockoutLiveScores(fixtures);
         const storedMatches = await readMatches("matches");

@@ -120,6 +120,7 @@ async function fetchFixtures(options = {}) {
     const to = process.env.APIFOOTBALL_TO || "2026-07-19";
     const includeFullFixtures = options.includeCompetitionFixtures || process.env.APIFOOTBALL_INCLUDE_FULL_FIXTURES === "1";
     const fixtureIds = Array.isArray(options.fixtureIds) ? options.fixtureIds.filter(Boolean) : [];
+    const fixtureDates = Array.isArray(options.dates) ? options.dates.filter(Boolean) : [];
     const urls = [
         `${BASE_URL}?live=all`
     ];
@@ -127,6 +128,13 @@ async function fetchFixtures(options = {}) {
     if (league && includeFullFixtures) {
         urls.push(`${BASE_URL}?league=${encodeURIComponent(league)}&season=${encodeURIComponent(season)}&from=${from}&to=${to}`);
     }
+
+    fixtureDates.forEach(date => {
+        urls.push(`${BASE_URL}?date=${encodeURIComponent(date)}`);
+        if (league && season) {
+            urls.push(`${BASE_URL}?league=${encodeURIComponent(league)}&season=${encodeURIComponent(season)}&date=${encodeURIComponent(date)}`);
+        }
+    });
 
     fixtureIds.forEach(id => {
         urls.push(`${BASE_URL}?id=${encodeURIComponent(id)}`);
@@ -177,7 +185,8 @@ function apiConfigInfo() {
         season: process.env.APIFOOTBALL_SEASON || "2026",
         from: process.env.APIFOOTBALL_FROM || "2026-06-11",
         to: process.env.APIFOOTBALL_TO || "2026-07-19",
-        knockoutFixtureIds: fixtureIds
+        knockoutFixtureIds: fixtureIds,
+        knockoutFixtureDates: knockoutFixtureDates()
     };
 }
 
@@ -222,6 +231,18 @@ function knockoutFixtureIds() {
     return readCSV("data/Matchs_16es_Coupe_du_Monde_2026.csv")
         .map(match => match.ApiFixtureId || match.apiFixtureId || "")
         .filter(Boolean);
+}
+
+function knockoutFixtureDates() {
+    return [...new Set(readCSV("data/Matchs_16es_Coupe_du_Monde_2026.csv")
+        .map(match => csvDateToApiDate(match.Date))
+        .filter(Boolean))];
+}
+
+function csvDateToApiDate(value) {
+    const match = String(value || "").match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
+    if (!match) return "";
+    return match[3] + "-" + match[2].padStart(2, "0") + "-" + match[1].padStart(2, "0");
 }
 
 function toSiteLiveScore(fixture, siteMatches) {
@@ -400,6 +421,7 @@ module.exports = {
     fetchFixtures,
     apiConfigInfo,
     knockoutFixtureIds,
+    knockoutFixtureDates,
     readJSON,
     safeReadJSON,
     toKnockoutLiveScores,
