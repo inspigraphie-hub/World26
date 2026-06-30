@@ -1,4 +1,5 @@
 const { apiConfigInfo, fetchFixtures, safeReadJSON, toSiteLiveScores } = require("./_api-football");
+const { mergeMatches, readMatches, saveMatches } = require("./_firebase");
 
 const EMPTY_LIVE_SCORES = {
     updatedAt: new Date().toISOString(),
@@ -20,12 +21,23 @@ module.exports = async function handler(req, res) {
         }
 
         const fixtures = await fetchFixtures();
-        return res.status(200).json(toSiteLiveScores(fixtures));
+        const data = toSiteLiveScores(fixtures);
+        const storedMatches = await readMatches("groupMatches");
+        data.matches = mergeMatches(data.matches, storedMatches);
+        if (data.matchedCount > 0) {
+            await saveMatches("groupMatches", data.matches);
+        }
+        data.firebase = { enabled: storedMatches.length > 0 || Boolean(process.env.FIREBASE_SERVICE_ACCOUNT_JSON || process.env.FIREBASE_SERVICE_ACCOUNT_BASE64), storedMatches: storedMatches.length };
+        return res.status(200).json(data);
     } catch (error) {
+        const fallback = safeReadJSON("data/live_scores.json", EMPTY_LIVE_SCORES);
+        const storedMatches = await readMatches("groupMatches");
+        fallback.matches = mergeMatches(fallback.matches || [], storedMatches);
         return res.status(200).json({
-            ...safeReadJSON("data/live_scores.json", EMPTY_LIVE_SCORES),
+            ...fallback,
             source: "local-fallback-api-error",
             apiConfig: apiConfigInfo(),
+            firebase: { enabled: storedMatches.length > 0 || Boolean(process.env.FIREBASE_SERVICE_ACCOUNT_JSON || process.env.FIREBASE_SERVICE_ACCOUNT_BASE64), storedMatches: storedMatches.length },
             warning: error.message
         });
     }

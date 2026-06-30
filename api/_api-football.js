@@ -290,7 +290,7 @@ function baseKnockoutLiveScore(match) {
         score2: match.Score2 || "",
         statut: match.Statut || "À venir",
         minute: "",
-        winner: ""
+        winner: match.Vainqueur || match.Winner || ""
     };
 }
 
