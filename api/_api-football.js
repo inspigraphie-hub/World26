@@ -3,7 +3,7 @@ const path = require("path");
 
 const ROOT = path.resolve(__dirname, "..");
 const BASE_URL = "https://v3.football.api-sports.io/fixtures";
-const FIXTURE_CACHE_MS = Number(process.env.APIFOOTBALL_CACHE_MS || 60000);
+const FIXTURE_CACHE_MS = Number(process.env.APIFOOTBALL_CACHE_MS || 10 * 60 * 1000);
 
 let fixtureCache = {};
 let lastFixtureDiagnostics = [];
@@ -124,7 +124,8 @@ async function fetchFixtures(options = {}) {
     const to = process.env.APIFOOTBALL_TO || "2026-07-19";
     const includeFullFixtures = options.includeCompetitionFixtures || process.env.APIFOOTBALL_INCLUDE_FULL_FIXTURES === "1";
     const fixtureIds = Array.isArray(options.fixtureIds) ? options.fixtureIds.filter(Boolean) : [];
-    const fixtureDates = Array.isArray(options.dates) ? options.dates.filter(Boolean) : [];
+    const allowDateQueries = options.allowDateQueries || process.env.APIFOOTBALL_ALLOW_DATE_QUERIES === "1";
+    const fixtureDates = allowDateQueries && Array.isArray(options.dates) ? options.dates.filter(Boolean) : [];
     const urls = [
         `${BASE_URL}?live=all`
     ];

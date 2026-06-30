@@ -10,7 +10,7 @@ class MatchManager {
         this.matches = [];
         this.activeFilter = "all";
         this.searchTerm = "";
-        this.pollMs = 30000;
+        this.pollMs = 15 * 60 * 1000;
         this.lastSignature = "";
         this.refreshTimer = null;
     }

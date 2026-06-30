@@ -1,4 +1,4 @@
-const { apiConfigInfo, fetchFixtures, knockoutFixtureDates, knockoutFixtureIds, safeReadJSON, toKnockoutLiveScores } = require("./_api-football");
+const { apiConfigInfo, fetchFixtures, knockoutFixtureIds, safeReadJSON, toKnockoutLiveScores } = require("./_api-football");
 const { mergeMatches, readMatches, saveMatches } = require("./_firebase");
 
 const EMPTY_KNOCKOUT = {
@@ -9,7 +9,7 @@ const EMPTY_KNOCKOUT = {
 
 module.exports = async function handler(req, res) {
     res.setHeader("Access-Control-Allow-Origin", "*");
-    res.setHeader("Cache-Control", "no-store, max-age=0");
+    res.setHeader("Cache-Control", "s-maxage=600, stale-while-revalidate=300");
 
     try {
         if (!process.env.APIFOOTBALL_KEY) {
@@ -21,9 +21,8 @@ module.exports = async function handler(req, res) {
         }
 
         const fixtures = await fetchFixtures({
-            includeCompetitionFixtures: true,
-            fixtureIds: knockoutFixtureIds(),
-            dates: knockoutFixtureDates()
+            includeCompetitionFixtures: false,
+            fixtureIds: knockoutFixtureIds()
         });
         const data = toKnockoutLiveScores(fixtures);
         const storedMatches = await readMatches("matches");

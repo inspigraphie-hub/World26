@@ -337,7 +337,7 @@
             } catch(error) {
                 console.warn("Tableau live en attente", error);
             }
-        }, 30000);
+        }, 15 * 60 * 1000);
     }
 
     matchKey(date, home, away) {
