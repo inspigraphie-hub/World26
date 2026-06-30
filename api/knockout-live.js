@@ -9,7 +9,7 @@ const EMPTY_KNOCKOUT = {
 
 module.exports = async function handler(req, res) {
     res.setHeader("Access-Control-Allow-Origin", "*");
-    res.setHeader("Cache-Control", "s-maxage=60, stale-while-revalidate=120");
+    res.setHeader("Cache-Control", "no-store, max-age=0");
 
     try {
         if (!process.env.APIFOOTBALL_KEY) {
@@ -26,7 +26,7 @@ module.exports = async function handler(req, res) {
         });
         const data = toKnockoutLiveScores(fixtures);
         const storedMatches = await readMatches("matches");
-        data.matches = mergeMatches(data.matches, storedMatches);
+        data.matches = mergeMatches(data.matches, storedMatches, { preferBaseValues: true });
         if (data.matchedCount > 0 || data.matches.some(match => match.winner || match.score1 || match.score2)) {
             await saveMatches("matches", data.matches);
         }
@@ -35,7 +35,7 @@ module.exports = async function handler(req, res) {
     } catch (error) {
         const fallback = safeReadJSON("data/knockout_live.json", EMPTY_KNOCKOUT);
         const storedMatches = await readMatches("matches");
-        fallback.matches = mergeMatches(fallback.matches || [], storedMatches);
+        fallback.matches = mergeMatches(fallback.matches || [], storedMatches, { preferBaseValues: true });
         return res.status(200).json({
             ...fallback,
             source: "local-fallback-api-error",

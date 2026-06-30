@@ -65,7 +65,7 @@ async function readMatches(collectionName) {
     return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
 }
 
-function mergeMatches(baseMatches, storedMatches) {
+function mergeMatches(baseMatches, storedMatches, options = {}) {
     if (!Array.isArray(storedMatches) || storedMatches.length === 0) return baseMatches;
 
     const storedById = new Map(storedMatches.map(match => [String(match.id), match]));
@@ -73,7 +73,17 @@ function mergeMatches(baseMatches, storedMatches) {
     return baseMatches.map(match => {
         const stored = storedById.get(String(match.id));
         if (!stored) return match;
-        return { ...match, ...stored };
+
+        const merged = { ...match, ...stored };
+        if (!options.preferBaseValues) return merged;
+
+        Object.entries(match).forEach(([key, value]) => {
+            if (value !== "" && value !== null && value !== undefined) {
+                merged[key] = value;
+            }
+        });
+
+        return merged;
     });
 }
 

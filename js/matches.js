@@ -44,10 +44,8 @@
 
         for (const path of paths) {
             try {
-                const url = path.startsWith("/api/")
-                    ? path
-                    : path + (path.includes("?") ? "&" : "?") + "t=" + Date.now();
-                const response = await fetch(url, { cache: path.startsWith("/api/") ? "default" : "no-store" });
+                const url = path + (path.includes("?") ? "&" : "?") + "t=" + Date.now();
+                const response = await fetch(url, { cache: "no-store" });
                 if(response.ok) return await response.json();
             } catch(error) {
                 // Try the next source.
