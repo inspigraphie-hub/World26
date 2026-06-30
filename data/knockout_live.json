@@ -1,6 +1,6 @@
 {
-  "updatedAt": "2026-06-30T21:46:28.182Z",
-  "source": "manual-16es-results",
+  "updatedAt": "2026-06-30T23:50:18.060Z",
+  "source": "manual-france-sweden-update",
   "matches": [
     {
       "id": "M73",
@@ -30,12 +30,12 @@
       "equipe2": "Suède",
       "drapeau1": "fr.png",
       "drapeau2": "se.png",
-      "score1": "",
-      "score2": "",
+      "score1": "3",
+      "score2": "0",
       "diffuseur": "M6, beIN Sports 1",
-      "statut": "À venir",
+      "statut": "Terminé",
       "minute": "",
-      "winner": "",
+      "winner": "France",
       "apiFixtureId": ""
     },
     {

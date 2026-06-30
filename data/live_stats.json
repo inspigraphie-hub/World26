@@ -1,24 +1,24 @@
 {
-  "updatedAt": "2026-06-30T19:58:58.548Z",
-  "source": "manual-ranking-update",
+  "updatedAt": "2026-06-30T23:50:18.057Z",
+  "source": "manual-france-sweden-update",
   "scorers": [
     {
       "Rang": 1,
+      "Joueurs": "Kylian Mbappé",
+      "Buts": 6,
+      "Photo": "mbappe.png"
+    },
+    {
+      "Rang": 2,
       "Joueurs": "Lionel Messi",
       "Buts": 6,
       "Photo": "messi.png"
     },
     {
-      "Rang": 2,
+      "Rang": 3,
       "Joueurs": "Erling Haaland",
       "Buts": 5,
       "Photo": "haaland.png"
-    },
-    {
-      "Rang": 3,
-      "Joueurs": "Kylian Mbappé",
-      "Buts": 4,
-      "Photo": "mbappe.png"
     },
     {
       "Rang": 4,
@@ -36,21 +36,21 @@
   "assists": [
     {
       "Rang": 1,
+      "Joueurs": "Michael Olise",
+      "Passes D.": 5,
+      "Photo": "olise.png"
+    },
+    {
+      "Rang": 2,
       "Joueurs": "Bruno Guimarães",
       "Passes D.": 4,
       "Photo": "guimaraes.png"
     },
     {
-      "Rang": 2,
+      "Rang": 3,
       "Joueurs": "Alexander Isak",
       "Passes D.": 3,
       "Photo": "isak.png"
-    },
-    {
-      "Rang": 3,
-      "Joueurs": "Michael Olise",
-      "Passes D.": 3,
-      "Photo": "olise.png"
     },
     {
       "Rang": 4,

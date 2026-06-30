@@ -1,8 +1,16 @@
 {
-  "updatedAt": "2026-06-30T21:55:13.820Z",
+  "updatedAt": "2026-06-30T23:50:18.059Z",
   "bestAttack": [
     {
       "rank": 1,
+      "team": "France",
+      "penalties": 0,
+      "goalsPerMatch": "3,25",
+      "played": 4,
+      "goals": 13
+    },
+    {
+      "rank": 2,
       "team": "Pays-Bas",
       "penalties": 0,
       "goalsPerMatch": "2,75",
@@ -10,20 +18,12 @@
       "goals": 11
     },
     {
-      "rank": 2,
+      "rank": 3,
       "team": "Allemagne",
       "penalties": 1,
       "goalsPerMatch": "2,75",
       "played": 4,
       "goals": 11
-    },
-    {
-      "rank": 3,
-      "team": "France",
-      "penalties": 0,
-      "goalsPerMatch": "3,33",
-      "played": 3,
-      "goals": 10
     },
     {
       "rank": 4,
