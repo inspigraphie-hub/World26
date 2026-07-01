@@ -1,6 +1,6 @@
 {
-  "updatedAt": "2026-06-30T23:50:18.057Z",
-  "source": "manual-france-sweden-update",
+  "updatedAt": "2026-07-01T07:48:49.738Z",
+  "source": "manual-assists-update",
   "scorers": [
     {
       "Rang": 1,
@@ -53,16 +53,16 @@
       "Photo": "isak.png"
     },
     {
-      "Rang": 4,
-      "Joueurs": "Brahim Díaz",
-      "Passes D.": 2,
-      "Photo": "diaz.png"
+      "Rang": 3,
+      "Joueurs": "Florian Wirtz",
+      "Passes D.": 3,
+      "Photo": "wirtz.png"
     },
     {
-      "Rang": 5,
-      "Joueurs": "Breel Embolo",
-      "Passes D.": 2,
-      "Photo": "embolo.png"
+      "Rang": 3,
+      "Joueurs": "Martin Ødegaard",
+      "Passes D.": 3,
+      "Photo": "odegaard.png"
     }
   ]
 }
