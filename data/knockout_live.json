@@ -1,6 +1,6 @@
 {
-  "updatedAt": "2026-07-01T07:31:21.108Z",
-  "source": "manual-mexico-ecuador-update",
+  "updatedAt": "2026-07-01T19:46:39.018Z",
+  "source": "manual-england-congo-update",
   "matches": [
     {
       "id": "M73",
@@ -210,12 +210,12 @@
       "equipe2": "Rép. Dém. Congo",
       "drapeau1": "gb-eng.png",
       "drapeau2": "cd.png",
-      "score1": "",
-      "score2": "",
+      "score1": "2",
+      "score2": "1",
       "diffuseur": "M6, beIN Sports 1",
-      "statut": "À venir",
+      "statut": "Terminé",
       "minute": "",
-      "winner": "",
+      "winner": "Angleterre",
       "apiFixtureId": ""
     },
     {

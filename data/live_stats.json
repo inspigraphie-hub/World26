@@ -1,6 +1,6 @@
 {
-  "updatedAt": "2026-07-01T07:48:49.738Z",
-  "source": "manual-assists-update",
+  "updatedAt": "2026-07-01T19:46:39.015Z",
+  "source": "manual-england-congo-update",
   "scorers": [
     {
       "Rang": 1,
@@ -9,7 +9,7 @@
       "Photo": "mbappe.png"
     },
     {
-      "Rang": 2,
+      "Rang": 1,
       "Joueurs": "Lionel Messi",
       "Buts": 6,
       "Photo": "messi.png"
@@ -21,16 +21,16 @@
       "Photo": "haaland.png"
     },
     {
-      "Rang": 4,
-      "Joueurs": "Ousmane Dembélé",
-      "Buts": 4,
-      "Photo": "dembele.png"
+      "Rang": 3,
+      "Joueurs": "Harry Kane",
+      "Buts": 5,
+      "Photo": "kane.png"
     },
     {
       "Rang": 5,
-      "Joueurs": "Vinícius Júnior",
+      "Joueurs": "Ousmane Dembélé",
       "Buts": 4,
-      "Photo": "vinicius.png"
+      "Photo": "dembele.png"
     }
   ],
   "assists": [
