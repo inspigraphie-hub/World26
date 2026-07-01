@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-06-30T23:50:18.059Z",
+  "updatedAt": "2026-07-01T07:31:21.107Z",
   "bestAttack": [
     {
       "rank": 1,
@@ -45,15 +45,15 @@
   "bestDefense": [
     {
       "rank": 1,
-      "team": "Espagne",
+      "team": "Mexique",
       "penalties": 0,
       "goalsPerMatch": "0",
-      "played": 3,
+      "played": 4,
       "goals": 0
     },
     {
       "rank": 2,
-      "team": "Mexique",
+      "team": "Espagne",
       "penalties": 0,
       "goalsPerMatch": "0",
       "played": 3,

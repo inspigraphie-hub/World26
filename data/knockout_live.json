@@ -1,6 +1,6 @@
 {
-  "updatedAt": "2026-06-30T23:50:18.060Z",
-  "source": "manual-france-sweden-update",
+  "updatedAt": "2026-07-01T07:31:21.108Z",
+  "source": "manual-mexico-ecuador-update",
   "matches": [
     {
       "id": "M73",
@@ -192,12 +192,12 @@
       "equipe2": "Équateur",
       "drapeau1": "mx.png",
       "drapeau2": "ec.png",
-      "score1": "",
-      "score2": "",
+      "score1": "2",
+      "score2": "0",
       "diffuseur": "beIN Sports 1",
-      "statut": "À venir",
+      "statut": "Terminé",
       "minute": "",
-      "winner": "",
+      "winner": "Mexique",
       "apiFixtureId": ""
     },
     {
