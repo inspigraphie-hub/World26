@@ -1,10 +1,10 @@
-Phase;Date;Jour;Heure;Equipe1;Drapeau1;Score1;Equipe2;Drapeau2;Score2;Diffuseur;Statut;Vainqueur;ApiFixtureId
+﻿Phase;Date;Jour;Heure;Equipe1;Drapeau1;Score1;Equipe2;Drapeau2;Score2;Diffuseur;Statut;Vainqueur;ApiFixtureId
 16es-de-finale;29/06/2026;lundi 29 juin;22:30;Allemagne;de.png;1 (3);Paraguay;py.png;1 (4);M6, beIN Sports 1;Terminé;Paraguay;
 16es-de-finale;30/06/2026;mardi 30 juin;23:00;France;fr.png;3;Suède;se.png;0;M6, beIN Sports 1;Terminé;France;
 16es-de-finale;28/06/2026;dimanche 28 juin;21:00;Afrique du Sud;za.png;0;Canada;ca.png;1;M6, beIN Sports 1;Terminé;Canada;1561329
 16es-de-finale;30/06/2026;mardi 30 juin;03:00;Pays-Bas;nl.png;1 (2);Maroc;ma.png;1 (3);beIN Sports 1;Terminé;Maroc;
 16es-de-finale;03/07/2026;vendredi 3 juillet;01:00;Portugal;pt.png;;Croatie;hr.png;;beIN Sports 1;À venir;;
-16es-de-finale;02/07/2026;jeudi 2 juillet;21:00;Espagne;es.png;;Autriche;at.png;;M6, beIN Sports 1;À venir;;
+16es-de-finale;02/07/2026;jeudi 2 juillet;21:00;Espagne;es.png;3;Autriche;at.png;0;M6, beIN Sports 1;Terminé;Espagne;
 16es-de-finale;02/07/2026;jeudi 2 juillet;02:00;États-Unis;us.png;2;Bosnie-Herzégovine;ba.png;0;beIN Sports 1;Terminé;États-Unis;
 16es-de-finale;01/07/2026;mercredi 1 juillet;22:00;Belgique;be.png;3;Sénégal;sn.png;2;beIN Sports 1;Terminé;Belgique;
 16es-de-finale;29/06/2026;lundi 29 juin;19:00;Brésil;br.png;2;Japon;jp.png;1;M6, beIN Sports 1;Terminé;Brésil;
