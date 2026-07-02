@@ -258,7 +258,7 @@ class MatchManager {
         </div>
 
         <div class="score">
-            <div class="score-number">${this.scoreText(match)}</div>
+            <div class="score-number">${this.scoreHTML(match)}</div>
         </div>
 
         <div class="team ${this.isWinner(match, "away") ? "winner" : ""}">
@@ -428,18 +428,40 @@ class MatchManager {
     }
 
     scoreText(match) {
-        const home = match["Score Domicile"];
-        const away = match["Score Exterieur"];
+        const parts = this.scoreParts(match);
+        if (!parts.hasScore) return "vs";
+        return parts.main;
+    }
 
-        if (home === "" && away === "") return "vs";
-        return `${home || "-"} - ${away || "-"}`;
+    scoreHTML(match) {
+        const parts = this.scoreParts(match);
+        if (!parts.hasScore) return "vs";
+        if (!parts.penalties) return `<span class="score-main">${parts.main}</span>`;
+        return `<span class="score-main">${parts.main}</span><span class="score-penalties">TAB ${parts.penalties}</span>`;
+    }
+
+    scoreParts(match) {
+        const home = match["Score Domicile"] || "";
+        const away = match["Score Exterieur"] || "";
+        const homeParts = this.splitPenaltyScore(home);
+        const awayParts = this.splitPenaltyScore(away);
+
+        return {
+            hasScore: home !== "" || away !== "",
+            main: `${homeParts.score || "-"} - ${awayParts.score || "-"}`,
+            penalties: homeParts.penalty || awayParts.penalty ? `${homeParts.penalty || "-"} - ${awayParts.penalty || "-"}` : ""
+        };
+    }
+
+    splitPenaltyScore(value) {
+        const match = String(value || "").match(/^(\d+)\s*\((\d+)\)$/);
+        if (!match) return { score: value || "", penalty: "" };
+        return { score: match[1], penalty: match[2] };
     }
 
     matchCenterText(match) {
-        const home = match["Score Domicile"];
-        const away = match["Score Exterieur"];
-
-        if (home !== "" || away !== "") return `${home || "-"} - ${away || "-"}`;
+        const parts = this.scoreParts(match);
+        if (parts.hasScore) return parts.penalties ? `${parts.main} (${parts.penalties} TAB)` : parts.main;
         return this.formatHour(match.Heure) || "vs";
     }
 

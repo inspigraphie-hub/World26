@@ -127,6 +127,7 @@ MATCHS DU JOUR
     font-weight:900;
     text-align:center;
     white-space:nowrap;
+    line-height:1.15;
 }
 
 .today-broadcaster{
@@ -491,6 +492,29 @@ SCORE
     font-weight:800;
 
     color:#222;
+
+}
+
+.score-main,
+.score-penalties{
+
+    display:block;
+
+    line-height:1;
+
+    text-align:center;
+
+}
+
+.score-penalties{
+
+    margin-top:6px;
+
+    font-size:15px;
+
+    font-weight:900;
+
+    color:#7b3ff2;
 
 }
 
@@ -943,6 +967,11 @@ RESPONSIVE
 .score-number{
     font-size:15px;
     white-space:nowrap;
+}
+
+.score-penalties{
+    margin-top:3px;
+    font-size:8px;
 }
 
 .score small{
@@ -1855,6 +1884,11 @@ FAN HUB
         min-height:32px;
         font-size:12px;
         border-radius:11px;
+    }
+
+    .score-penalties{
+        margin-top:3px;
+        font-size:7px;
     }
 
     .bracket-section{
