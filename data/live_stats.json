@@ -1,0 +1,74 @@
+{
+  "updatedAt": "2026-07-02T18:56:03.881Z",
+  "source": "manual-us-belgium-scorers-update",
+  "scorers": [
+    {
+      "Rang": 1,
+      "Joueurs": "Kylian Mbappé",
+      "Buts": 6,
+      "Photo": "mbappe.png"
+    },
+    {
+      "Rang": 1,
+      "Joueurs": "Lionel Messi",
+      "Buts": 6,
+      "Photo": "messi.png"
+    },
+    {
+      "Rang": 3,
+      "Joueurs": "Erling Haaland",
+      "Buts": 5,
+      "Photo": "haaland.png"
+    },
+    {
+      "Rang": 3,
+      "Joueurs": "Harry Kane",
+      "Buts": 5,
+      "Photo": "kane.png"
+    },
+    {
+      "Rang": 5,
+      "Joueurs": "Ismaïla Sarr",
+      "Buts": 4,
+      "Photo": "sarr.png"
+    },
+    {
+      "Rang": 5,
+      "Joueurs": "Ousmane Dembélé",
+      "Buts": 4,
+      "Photo": "dembele.png"
+    }
+  ],
+  "assists": [
+    {
+      "Rang": 1,
+      "Joueurs": "Michael Olise",
+      "Passes D.": 5,
+      "Photo": "olise.png"
+    },
+    {
+      "Rang": 2,
+      "Joueurs": "Bruno Guimarães",
+      "Passes D.": 4,
+      "Photo": "guimaraes.png"
+    },
+    {
+      "Rang": 3,
+      "Joueurs": "Alexander Isak",
+      "Passes D.": 3,
+      "Photo": "isak.png"
+    },
+    {
+      "Rang": 3,
+      "Joueurs": "Florian Wirtz",
+      "Passes D.": 3,
+      "Photo": "wirtz.png"
+    },
+    {
+      "Rang": 3,
+      "Joueurs": "Martin Ødegaard",
+      "Passes D.": 3,
+      "Photo": "odegaard.png"
+    }
+  ]
+}

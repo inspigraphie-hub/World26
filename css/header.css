@@ -1,0 +1,276 @@
+/*==========================================
+HEADER
+==========================================*/
+
+header{
+
+    width:1200px;
+    max-width:92%;
+
+    margin:35px auto;
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+}
+
+/*==========================================
+LOGO
+==========================================*/
+
+.logo{
+
+    display:flex;
+    align-items:center;
+
+}
+
+.logo img{
+
+    width:50px;
+
+    transition:.35s;
+
+}
+
+.logo img:hover{
+
+    transform:scale(1.05);
+
+}
+
+/*==========================================
+MENU
+==========================================*/
+
+nav{
+
+    display:flex;
+
+    gap:18px;
+
+    align-items:center;
+
+}
+
+nav a{
+
+    padding:14px 26px;
+
+    border-radius:999px;
+
+    color:white;
+
+    font-weight:700;
+
+    font-size:15px;
+
+    letter-spacing:.5px;
+
+    transition:.35s;
+
+    box-shadow:0 10px 20px rgba(0,0,0,.08);
+
+}
+
+nav a:hover{
+
+    transform:translateY(-4px);
+
+    box-shadow:0 18px 35px rgba(0,0,0,.15);
+
+}
+
+nav a.active{
+
+    transform:scale(1.05);
+
+}
+
+/*==========================================
+COULEURS
+==========================================*/
+
+nav .green{
+
+    background:#62D95D;
+
+}
+
+nav .purple{
+
+    background:#7A2CF5;
+
+}
+
+nav .cyan{
+
+    background:#16C7F5;
+
+}
+
+nav .red{
+
+    background:#FF5050;
+
+}
+
+nav .gold{
+
+    background:#066af6;
+
+    color:#fff;
+
+}
+
+/*==========================================
+SEPARATEUR
+==========================================*/
+
+.separator{
+
+    width:100%;
+
+    height:2px;
+
+    background:#ECECEC;
+
+    margin-top:15px;
+
+}
+
+/*==========================================
+VERSION TABLETTE
+==========================================*/
+
+@media(max-width:1000px){
+
+header{
+
+    flex-direction:column;
+
+    gap:30px;
+
+}
+
+nav{
+
+    flex-wrap:wrap;
+
+    justify-content:center;
+
+}
+
+}
+
+/*==========================================
+VERSION MOBILE
+==========================================*/
+
+@media(max-width:650px){
+
+body{
+    padding-bottom:86px;
+}
+
+header{
+    max-width:100%;
+    margin:16px auto 12px;
+    padding:0 14px;
+    gap:14px;
+    justify-content:center;
+}
+
+.logo img{
+    width:52px;
+}
+
+nav{
+    position:fixed;
+    left:10px;
+    right:10px;
+    bottom:10px;
+    z-index:1000;
+    width:auto;
+    display:grid;
+    grid-template-columns:repeat(4,minmax(0,1fr));
+    gap:4px;
+    padding:8px;
+    overflow:visible;
+    border:1px solid rgba(0,0,0,.08);
+    border-radius:24px;
+    background:rgba(255,255,255,.94);
+    box-shadow:0 14px 34px rgba(0,0,0,.16);
+    backdrop-filter:blur(16px);
+}
+
+nav::-webkit-scrollbar{
+    display:none;
+}
+
+nav a{
+    min-width:0;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    gap:4px;
+    padding:9px 4px;
+    border-radius:18px;
+    background:transparent !important;
+    color:#666;
+    font-size:10px;
+    letter-spacing:0;
+    line-height:1;
+    box-shadow:none;
+    transform:none;
+}
+
+nav a.green{ color:#24b85a; }
+nav a.purple{ color:#7A2CF5; }
+nav a.cyan{ color:#16C7F5; }
+nav a.red{ color:#FF5050; }
+nav a.gold{ color:#066af6; }
+
+nav a::before{
+    display:block;
+    font-family:"Font Awesome 6 Free";
+    font-size:20px;
+    font-weight:900;
+    line-height:1;
+}
+
+nav a.green::before{
+    content:"\f1e3";
+}
+
+nav a.purple::before{
+    content:"\f0c0";
+}
+
+nav a.cyan::before{
+    content:"\f5a2";
+}
+
+nav a.red::before{
+    content:"\f091";
+}
+
+nav a.gold::before{
+    content:"\f51e";
+}
+
+nav a.active{
+    color:#fff;
+}
+
+nav a.active.green{ background:#24b85a !important; }
+nav a.active.purple{ background:#7A2CF5 !important; }
+nav a.active.cyan{ background:#16C7F5 !important; }
+nav a.active.red{ background:#FF5050 !important; }
+nav a.active.gold{ background:#066af6 !important; }
+
+}
