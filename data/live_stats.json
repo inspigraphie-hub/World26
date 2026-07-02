@@ -1,6 +1,6 @@
 {
-  "updatedAt": "2026-07-01T19:46:39.015Z",
-  "source": "manual-england-congo-update",
+  "updatedAt": "2026-07-02T18:56:03.881Z",
+  "source": "manual-us-belgium-scorers-update",
   "scorers": [
     {
       "Rang": 1,
@@ -25,6 +25,12 @@
       "Joueurs": "Harry Kane",
       "Buts": 5,
       "Photo": "kane.png"
+    },
+    {
+      "Rang": 5,
+      "Joueurs": "Ismaïla Sarr",
+      "Buts": 4,
+      "Photo": "sarr.png"
     },
     {
       "Rang": 5,

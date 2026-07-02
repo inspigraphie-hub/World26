@@ -1,6 +1,6 @@
 {
-  "updatedAt": "2026-07-01T19:46:39.018Z",
-  "source": "manual-england-congo-update",
+  "updatedAt": "2026-07-02T18:56:03.884Z",
+  "source": "manual-us-belgium-update",
   "matches": [
     {
       "id": "M73",
@@ -120,12 +120,12 @@
       "equipe2": "Bosnie-Herzégovine",
       "drapeau1": "us.png",
       "drapeau2": "ba.png",
-      "score1": "",
-      "score2": "",
+      "score1": "2",
+      "score2": "0",
       "diffuseur": "beIN Sports 1",
-      "statut": "À venir",
+      "statut": "Terminé",
       "minute": "",
-      "winner": "",
+      "winner": "États-Unis",
       "apiFixtureId": ""
     },
     {
@@ -138,12 +138,12 @@
       "equipe2": "Sénégal",
       "drapeau1": "be.png",
       "drapeau2": "sn.png",
-      "score1": "",
-      "score2": "",
+      "score1": "3",
+      "score2": "2",
       "diffuseur": "beIN Sports 1",
-      "statut": "À venir",
+      "statut": "Terminé",
       "minute": "",
-      "winner": "",
+      "winner": "Belgique",
       "apiFixtureId": ""
     },
     {
