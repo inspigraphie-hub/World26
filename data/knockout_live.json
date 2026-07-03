@@ -1,6 +1,6 @@
 ﻿{
-    "updatedAt":  "2026-07-02T22:11:43.4886840Z",
-    "source":  "manual-spain-austria-update",
+    "updatedAt":  "2026-07-03T12:36:31.9768303Z",
+    "source":  "manual-portugal-switzerland-update",
     "matches":  [
                     {
                         "id":  "M73",
@@ -84,12 +84,12 @@
                         "equipe2":  "Croatie",
                         "drapeau1":  "pt.png",
                         "drapeau2":  "hr.png",
-                        "score1":  "",
-                        "score2":  "",
+                        "score1":  "2",
+                        "score2":  "1",
                         "diffuseur":  "beIN Sports 1",
-                        "statut":  "À venir",
+                        "statut":  "Terminé",
                         "minute":  "",
-                        "winner":  "",
+                        "winner":  "Portugal",
                         "apiFixtureId":  ""
                     },
                     {
@@ -264,12 +264,12 @@
                         "equipe2":  "Algérie",
                         "drapeau1":  "ch.png",
                         "drapeau2":  "dz.png",
-                        "score1":  "",
-                        "score2":  "",
+                        "score1":  "2",
+                        "score2":  "0",
                         "diffuseur":  "beIN Sports 1",
-                        "statut":  "À venir",
+                        "statut":  "Terminé",
                         "minute":  "",
-                        "winner":  "",
+                        "winner":  "Suisse",
                         "apiFixtureId":  ""
                     },
                     {
