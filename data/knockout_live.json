@@ -1,6 +1,6 @@
 ﻿{
-    "updatedAt":  "2026-07-03T12:36:31.9768303Z",
-    "source":  "manual-portugal-switzerland-update",
+    "updatedAt":  "2026-07-04T16:52:10.0623665Z",
+    "source":  "manual-colombia-ghana-update",
     "matches":  [
                     {
                         "id":  "M73",
@@ -228,12 +228,12 @@
                         "equipe2":  "Cap-Vert",
                         "drapeau1":  "ar.png",
                         "drapeau2":  "cv.png",
-                        "score1":  "",
-                        "score2":  "",
+                        "score1":  "3",
+                        "score2":  "2",
                         "diffuseur":  "M6, beIN Sports 1",
-                        "statut":  "À venir",
+                        "statut":  "Terminé",
                         "minute":  "",
-                        "winner":  "",
+                        "winner":  "Argentine",
                         "apiFixtureId":  ""
                     },
                     {
@@ -246,12 +246,12 @@
                         "equipe2":  "Égypte",
                         "drapeau1":  "au.png",
                         "drapeau2":  "eg.png",
-                        "score1":  "",
-                        "score2":  "",
+                        "score1":  "1 (2)",
+                        "score2":  "1 (4)",
                         "diffuseur":  "M6, beIN Sports 1",
-                        "statut":  "À venir",
+                        "statut":  "Terminé",
                         "minute":  "",
-                        "winner":  "",
+                        "winner":  "Égypte",
                         "apiFixtureId":  ""
                     },
                     {
@@ -282,12 +282,12 @@
                         "equipe2":  "Ghana",
                         "drapeau1":  "co.png",
                         "drapeau2":  "gh.png",
-                        "score1":  "",
-                        "score2":  "",
+                        "score1":  "1",
+                        "score2":  "0",
                         "diffuseur":  "beIN Sports 1",
-                        "statut":  "À venir",
+                        "statut":  "Terminé",
                         "minute":  "",
-                        "winner":  "",
+                        "winner":  "Colombie",
                         "apiFixtureId":  ""
                     }
                 ]

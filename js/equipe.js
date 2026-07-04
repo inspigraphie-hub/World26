@@ -7,11 +7,12 @@
 
     async init() {
         try {
-            const [matches, standings] = await Promise.all([
+            const [groupMatches, knockoutMatches, standings] = await Promise.all([
                 this.loadCSV("data/Resultats_Coupe_du_Monde.csv"),
+                this.loadKnockoutMatches(),
                 this.loadCSV("data/Classement.csv")
             ]);
-            this.matches = matches;
+            this.matches = [...groupMatches, ...knockoutMatches];
             this.standings = standings;
             this.render();
         } catch(error) {
@@ -21,10 +22,29 @@
     }
 
     async loadCSV(path) {
-        const response = await fetch(path);
+        const response = await fetch(path + "?t=" + Date.now(), { cache: "no-store" });
         if(!response.ok) throw new Error("Impossible de charger " + path);
         const text = await response.text();
         return this.parseCSV(text.replace(/^\uFEFF/, ""));
+    }
+
+    async loadKnockoutMatches() {
+        try {
+            const rows = await this.loadCSV("data/Matchs_16es_Coupe_du_Monde_2026.csv");
+            return rows.map(row => ({
+                Date: this.displayDate(row.Date),
+                Groupe: "16e de finale",
+                Domicile: row.Equipe1 || row["Équipe1"] || "",
+                Exterieur: row.Equipe2 || row["Équipe2"] || "",
+                "Score Domicile": row.Score1 || "",
+                "Score Exterieur": row.Score2 || "",
+                Statut: row.Statut || "À venir",
+                Heure: row.Heure || "",
+                _rawDate: row.Date || ""
+            }));
+        } catch(error) {
+            return [];
+        }
     }
 
     parseCSV(csv) {
@@ -135,6 +155,13 @@
 
     opponentFor(match) {
         return this.sameTeam(match.Domicile) ? match.Exterieur : match.Domicile;
+    }
+
+    displayDate(value) {
+        const match = String(value || "").match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
+        if(!match) return value || "";
+        const months = ["janv", "f?vr", "mars", "avr", "mai", "juin", "juil", "ao?t", "sept", "oct", "nov", "d?c"];
+        return Number(match[1]) + "-" + months[Number(match[2]) - 1];
     }
 
     scoreText(match) {

@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-07-01T07:31:21.107Z",
+  "updatedAt": "2026-07-04T17:13:49.381Z",
   "bestAttack": [
     {
       "rank": 1,
@@ -27,19 +27,19 @@
     },
     {
       "rank": 4,
-      "team": "Brésil",
+      "team": "Argentine",
       "penalties": 0,
-      "goalsPerMatch": "2,25",
+      "goalsPerMatch": "2,75",
       "played": 4,
-      "goals": 9
+      "goals": 11
     },
     {
       "rank": 5,
-      "team": "Canada",
+      "team": "?tats-Unis",
       "penalties": 0,
-      "goalsPerMatch": "2,25",
+      "goalsPerMatch": "2,50",
       "played": 4,
-      "goals": 9
+      "goals": 10
     }
   ],
   "bestDefense": [
@@ -56,32 +56,32 @@
       "team": "Espagne",
       "penalties": 0,
       "goalsPerMatch": "0",
-      "played": 3,
+      "played": 4,
       "goals": 0
     },
     {
       "rank": 3,
-      "team": "Argentine",
+      "team": "Colombie",
       "penalties": 0,
-      "goalsPerMatch": "0,33",
-      "played": 3,
+      "goalsPerMatch": "0,25",
+      "played": 4,
       "goals": 1
     },
     {
       "rank": 4,
-      "team": "Brésil",
+      "team": "Br?sil",
       "penalties": 0,
-      "goalsPerMatch": "0,33",
-      "played": 3,
-      "goals": 1
+      "goalsPerMatch": "0,50",
+      "played": 4,
+      "goals": 2
     },
     {
       "rank": 5,
-      "team": "Colombie",
+      "team": "Portugal",
       "penalties": 0,
-      "goalsPerMatch": "0,33",
-      "played": 3,
-      "goals": 1
+      "goalsPerMatch": "0,50",
+      "played": 4,
+      "goals": 2
     }
   ]
 }
