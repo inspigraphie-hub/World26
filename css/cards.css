@@ -872,6 +872,22 @@ RESPONSIVE
 .today-team strong{ font-size:13px; }
 .today-team span{ font-size:18px; }
 
+.today-teams{
+    grid-template-columns:minmax(0,1fr) 42px minmax(0,1fr);
+    column-gap:4px;
+}
+
+.today-separator{
+    justify-self:center;
+    width:38px;
+    min-width:38px;
+    padding:5px 0;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    box-sizing:border-box;
+}
+
 .matches-heading{
     position:sticky;
     top:0;
