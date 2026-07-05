@@ -163,10 +163,10 @@
             leftRound32.map((match,index) => this.matchBox(match, index)).join(""),
             '</div>',
             '<div class="bracket-column round-eight-finals" data-round="round-eight-finals">',
-            this.projectedMatch("M89", ["M75", "M76"], matchesById, 8),
-            this.projectedMatch("M90", ["M73", "M74"], matchesById, 9),
-            this.projectedMatch("M91", ["M81", "M82"], matchesById, 10),
-            this.projectedMatch("M92", ["M83", "M84"], matchesById, 11),
+            this.projectedMatch("M89", ["M73", "M74"], matchesById, 8),
+            this.projectedMatch("M90", ["M75", "M76"], matchesById, 9),
+            this.projectedMatch("M91", ["M77", "M78"], matchesById, 10),
+            this.projectedMatch("M92", ["M79", "M80"], matchesById, 11),
             '</div>',
             '<div class="bracket-column round-quarter-finals" data-round="round-quarter-finals">',
             this.projectedMatch("M97", ["M89", "M90"], matchesById, 12),
@@ -187,8 +187,8 @@
             this.projectedMatch("M100", ["M95", "M96"], matchesById, 19),
             '</div>',
             '<div class="bracket-column round-eight-finals" data-round="round-eight-finals">',
-            this.projectedMatch("M93", ["M77", "M78"], matchesById, 20),
-            this.projectedMatch("M94", ["M79", "M80"], matchesById, 21),
+            this.projectedMatch("M93", ["M81", "M82"], matchesById, 20),
+            this.projectedMatch("M94", ["M83", "M84"], matchesById, 21),
             this.projectedMatch("M95", ["M85", "M86"], matchesById, 22),
             this.projectedMatch("M96", ["M87", "M88"], matchesById, 23),
             '</div>',
@@ -271,8 +271,8 @@
 
     roundResultFor(id) {
         const results = {
-            M89: { score1: "0", score2: "3" },
-            M90: { score1: "0", score2: "1" }
+            M89: { score1: "0", score2: "1" },
+            M90: { score1: "0", score2: "3" }
         };
         return results[id] || null;
     }

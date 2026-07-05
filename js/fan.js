@@ -84,7 +84,7 @@ class FanExperience {
     async loadKnockoutMatches() {
         try {
             const rows = await this.loadCSV("data/Matchs_16es_Coupe_du_Monde_2026.csv");
-            return rows.map(row => ({
+            const roundOf32 = rows.map(row => ({
                 Date: this.displayDate(row.Date),
                 Groupe: "16e de finale",
                 Domicile: row.Equipe1 || row["Équipe1"] || "",
@@ -95,9 +95,36 @@ class FanExperience {
                 Heure: row.Heure || "",
                 _rawDate: row.Date || ""
             }));
+            return [...roundOf32, ...this.projectRoundOf16Matches()];
         } catch(error) {
-            return [];
+            return this.projectRoundOf16Matches();
         }
+    }
+
+    projectRoundOf16Matches() {
+        const fixtures = [
+            { date: "04/07/2026", display: "4-juil", hour: "19:00", home: "Canada", away: "Maroc", scoreHome: "0", scoreAway: "3", status: "Terminé", winner: "Maroc" },
+            { date: "04/07/2026", display: "4-juil", hour: "23:00", home: "Paraguay", away: "France", scoreHome: "0", scoreAway: "1", status: "Terminé", winner: "France" },
+            { date: "05/07/2026", display: "5-juil", hour: "22:00", home: "Brésil", away: "Norvège" },
+            { date: "06/07/2026", display: "6-juil", hour: "02:00", home: "Mexique", away: "Angleterre" },
+            { date: "06/07/2026", display: "6-juil", hour: "21:00", home: "Portugal", away: "Espagne" },
+            { date: "07/07/2026", display: "7-juil", hour: "02:00", home: "États-Unis", away: "Belgique" },
+            { date: "07/07/2026", display: "7-juil", hour: "18:00", home: "Argentine", away: "Égypte" },
+            { date: "07/07/2026", display: "7-juil", hour: "22:00", home: "Suisse", away: "Colombie" }
+        ];
+
+        return fixtures.map(fixture => ({
+            Date: fixture.display,
+            Groupe: "Huitièmes de finale",
+            Domicile: fixture.home,
+            Exterieur: fixture.away,
+            "Score Domicile": fixture.scoreHome || "",
+            "Score Exterieur": fixture.scoreAway || "",
+            Statut: fixture.status || "À venir",
+            Heure: fixture.hour,
+            Vainqueur: fixture.winner || "",
+            _rawDate: fixture.date
+        }));
     }
 
     mergeLiveScores(matches, liveMatches) {
