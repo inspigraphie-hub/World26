@@ -39,7 +39,8 @@ class MatchManager {
             this.loadLiveScores()
         ]);
 
-        return this.sortMatchesForHome(this.mergeLiveScores([...groupMatches, ...knockoutMatches], live.matches || []));
+        const projectedKnockout = this.projectNextKnockoutMatches(knockoutMatches);
+        return this.sortMatchesForHome(this.mergeLiveScores([...groupMatches, ...knockoutMatches, ...projectedKnockout], live.matches || []));
     }
 
     async loadCSV(path) {
@@ -156,6 +157,7 @@ class MatchManager {
             Statut: match.Statut || "À venir",
             Heure: match.Heure || "",
             Diffuseur: match.Diffuseur || "",
+            Vainqueur: match.Vainqueur || match.Winner || "",
             "Drapeau Domicile": match.Drapeau1 || "",
             "Drapeau Exterieur": match.Drapeau2 || "",
             _rawDate: match.Date || "",
@@ -163,6 +165,59 @@ class MatchManager {
             _knockoutId: "M" + (73 + index),
             _isKnockout: "1"
         };
+    }
+
+    projectNextKnockoutMatches(matches) {
+        const fixtures = [
+            { date: "04/07/2026", display: "4-juil", hour: "19:00", home: "Canada", away: "Maroc", homeFlag: "ca.png", awayFlag: "ma.png", scoreHome: "0", scoreAway: "3", status: "Terminé", winner: "Maroc" },
+            { date: "04/07/2026", display: "4-juil", hour: "23:00", home: "Paraguay", away: "France", homeFlag: "py.png", awayFlag: "fr.png", scoreHome: "0", scoreAway: "1", status: "Terminé", winner: "France" },
+            { date: "05/07/2026", display: "5-juil", hour: "22:00", home: "Brésil", away: "Norvège", homeFlag: "br.png", awayFlag: "no.png" },
+            { date: "06/07/2026", display: "6-juil", hour: "02:00", home: "Mexique", away: "Angleterre", homeFlag: "mx.png", awayFlag: "gb-eng.png" },
+            { date: "06/07/2026", display: "6-juil", hour: "21:00", home: "Portugal", away: "Espagne", homeFlag: "pt.png", awayFlag: "es.png" },
+            { date: "07/07/2026", display: "7-juil", hour: "02:00", home: "États-Unis", away: "Belgique", homeFlag: "us.png", awayFlag: "be.png" },
+            { date: "07/07/2026", display: "7-juil", hour: "18:00", home: "Argentine", away: "Égypte", homeFlag: "ar.png", awayFlag: "eg.png" },
+            { date: "07/07/2026", display: "7-juil", hour: "22:00", home: "Suisse", away: "Colombie", homeFlag: "ch.png", awayFlag: "co.png" }
+        ];
+
+        return fixtures.map((fixture, index) => ({
+            Date: fixture.display,
+            Groupe: "Huitièmes de finale",
+            Domicile: fixture.home,
+            Exterieur: fixture.away,
+            "Score Domicile": "",
+            "Score Exterieur": "",
+            Statut: "À venir",
+            Heure: fixture.hour,
+            Diffuseur: "",
+            Vainqueur: fixture.winner || "",
+            "Drapeau Domicile": fixture.homeFlag,
+            "Drapeau Exterieur": fixture.awayFlag,
+            _rawDate: fixture.date,
+            _sortDate: this.sortDateValue(fixture.date),
+            _knockoutId: "M" + (89 + index),
+            _isProjectedKnockout: "1"
+        }));
+    }
+
+    winnerFromMatch(match) {
+        if(!match || this.statusKey(match) !== "done") return null;
+        const explicit = match.Vainqueur || match.Winner || "";
+        if(explicit) {
+            if(this.sameTeamName(explicit, match.Domicile)) return { team: match.Domicile, flag: match["Drapeau Domicile"] };
+            if(this.sameTeamName(explicit, match.Exterieur)) return { team: match.Exterieur, flag: match["Drapeau Exterieur"] };
+            return { team: explicit, flag: this.flag(explicit, "") };
+        }
+
+        const home = Number(this.splitPenaltyScore(match["Score Domicile"]).score);
+        const away = Number(this.splitPenaltyScore(match["Score Exterieur"]).score);
+        if(Number.isNaN(home) || Number.isNaN(away) || home === away) return null;
+        return home > away
+            ? { team: match.Domicile, flag: match["Drapeau Domicile"] }
+            : { team: match.Exterieur, flag: match["Drapeau Exterieur"] };
+    }
+
+    sameTeamName(left, right) {
+        return this.normalizeText(left) === this.normalizeText(right);
     }
 
     fixEncoding(text) {
@@ -325,7 +380,8 @@ class MatchManager {
 
         const today = this.todayKey();
         const liveUpdatedMatches = this.matches.filter(match => match._liveUpdated);
-        let matches = this.sortMatchesByTime(this.matches.filter(match => match["Date"] === today));
+        const todayMatches = this.sortMatchesByTime(this.matches.filter(match => match["Date"] === today));
+        let matches = todayMatches;
         let title = "Matchs du jour";
 
         if (liveUpdatedMatches.length > 0) {
@@ -338,16 +394,20 @@ class MatchManager {
             }));
         }
 
-        if (matches.length === 0) {
-            matches = this.getNextUpcomingMatches(3);
-            title = "Prochains matchs";
+        const hasUpcomingToday = matches.some(match => this.statusKey(match) !== "done");
+        if (matches.length === 0 || !hasUpcomingToday) {
+            const nextMatches = this.getNextUpcomingMatches(4);
+            if(nextMatches.length > 0) {
+                matches = nextMatches;
+                title = "Prochains matchs";
+            }
         }
 
         this.todayTitle.textContent = title;
         this.todayCount.textContent = `${matches.length} ${matches.length > 1 ? "matchs" : "match"}`;
         this.todayContainer.innerHTML = matches.length
             ? matches.map((match, index) => this.createTodayCard(match, index)).join("")
-            : `<div class="empty-state">Aucun match à afficher pour le moment.</div>`;
+            : `<div class="empty-state">Aucun match ? afficher pour le moment.</div>`;
     }
 
     createTodayCard(match, index) {
