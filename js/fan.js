@@ -284,7 +284,7 @@ class FanExperience {
         const upcoming = this.matches.filter(match => this.statusKey(match) !== "done").slice(0, 4);
         grid.innerHTML = [
             this.rankingCard("Top buteurs", "fa-futbol", "green", this.scorers.slice(0, 6).map(player => ({ label: player.Joueurs, value: player.Buts + " buts" }))),
-            this.rankingCard("Top passeurs", "fa-wand-magic-sparkles", "cyan", this.assists.slice(0, 5).map(player => ({ label: player.Joueurs, value: player["Passes D."] + " passes" }))),
+            this.rankingCard("Top passeurs", "fa-wand-magic-sparkles", "cyan", this.assists.slice(0, 6).map(player => ({ label: player.Joueurs, value: player["Passes D."] + " passes" }))),
             this.rankingCard("Meilleures attaques", "fa-bolt", "red", quickAttack.length ? quickAttack : attacks.slice(0, 5).map(team => ({ label: team["Ã‰quipe"], value: team.Bp + " BP" }))),
             this.rankingCard("Meilleures défenses", "fa-shield-halved", "purple", quickDefense.length ? quickDefense : defenses.slice(0, 5).map(team => ({ label: team["Ã‰quipe"], value: team.Bc + " BC" }))),
             this.rankingCard("Équipes en forme", "fa-trophy", "gold", qualified.map(team => ({ label: team["Équipe"], value: team.Pts + " pts" }))),

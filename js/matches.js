@@ -163,10 +163,10 @@
             leftRound32.map((match,index) => this.matchBox(match, index)).join(""),
             '</div>',
             '<div class="bracket-column round-eight-finals" data-round="round-eight-finals">',
-            this.projectedMatch("M89", ["M73", "M74"], matchesById, 8),
-            this.projectedMatch("M90", ["M75", "M76"], matchesById, 9),
-            this.projectedMatch("M91", ["M77", "M78"], matchesById, 10),
-            this.projectedMatch("M92", ["M79", "M80"], matchesById, 11),
+            this.projectedMatch("M89", ["M75", "M76"], matchesById, 8),
+            this.projectedMatch("M90", ["M73", "M74"], matchesById, 9),
+            this.projectedMatch("M91", ["M81", "M82"], matchesById, 10),
+            this.projectedMatch("M92", ["M83", "M84"], matchesById, 11),
             '</div>',
             '<div class="bracket-column round-quarter-finals" data-round="round-quarter-finals">',
             this.projectedMatch("M97", ["M89", "M90"], matchesById, 12),
@@ -183,12 +183,12 @@
             this.projectedMatch("M102", ["M99", "M100"], matchesById, 17),
             '</div>',
             '<div class="bracket-column round-quarter-finals" data-round="round-quarter-finals">',
-            this.projectedMatch("M99", ["M91", "M92"], matchesById, 18),
+            this.projectedMatch("M99", ["M93", "M94"], matchesById, 18),
             this.projectedMatch("M100", ["M95", "M96"], matchesById, 19),
             '</div>',
             '<div class="bracket-column round-eight-finals" data-round="round-eight-finals">',
-            this.projectedMatch("M93", ["M81", "M82"], matchesById, 20),
-            this.projectedMatch("M94", ["M83", "M84"], matchesById, 21),
+            this.projectedMatch("M93", ["M77", "M78"], matchesById, 20),
+            this.projectedMatch("M94", ["M79", "M80"], matchesById, 21),
             this.projectedMatch("M95", ["M85", "M86"], matchesById, 22),
             this.projectedMatch("M96", ["M87", "M88"], matchesById, 23),
             '</div>',
@@ -254,24 +254,51 @@
 
     projectedMatch(id, sourceIds, matchesById, index) {
         const teams = sourceIds.map(sourceId => matchesById[sourceId]?.winner || null);
+        const result = this.roundResultFor(id);
+        const team1 = teams[0] || { team: "À déterminer", flag: "" };
+        const team2 = teams[1] || { team: "À déterminer", flag: "" };
+        const winner = result ? this.winnerFromProjectedResult(team1, team2, result) : null;
+        const loser = result ? this.loserFromProjectedResult(team1, team2, result) : null;
 
         matchesById[id] = {
             id,
-            winner: null,
-            loser: null
+            winner,
+            loser
         };
 
-        return this.emptyOrProjectedMatch(teams, index);
+        return this.emptyOrProjectedMatch([team1, team2], index, result, winner);
     }
 
-    emptyOrProjectedMatch(teams, index) {
+    roundResultFor(id) {
+        const results = {
+            M89: { score1: "0", score2: "3" },
+            M90: { score1: "0", score2: "1" }
+        };
+        return results[id] || null;
+    }
+
+    winnerFromProjectedResult(team1, team2, result) {
+        const score1 = Number(result.score1);
+        const score2 = Number(result.score2);
+        if(Number.isNaN(score1) || Number.isNaN(score2) || score1 === score2) return null;
+        return score1 > score2 ? team1 : team2;
+    }
+
+    loserFromProjectedResult(team1, team2, result) {
+        const score1 = Number(result.score1);
+        const score2 = Number(result.score2);
+        if(Number.isNaN(score1) || Number.isNaN(score2) || score1 === score2) return null;
+        return score1 < score2 ? team1 : team2;
+    }
+
+    emptyOrProjectedMatch(teams, index, result = null, winner = null) {
         const team1 = teams[0] || { team: "À déterminer", flag: "" };
         const team2 = teams[1] || { team: "À déterminer", flag: "" };
 
         return [
             '<div class="bracket-match reveal-bracket" style="animation-delay:' + (index * 0.05) + 's">',
-            this.teamRow(team1.team, team1.flag, ""),
-            this.teamRow(team2.team, team2.flag, ""),
+            this.teamRow(team1.team, team1.flag, result?.score1 || "", winner?.team === team1.team),
+            this.teamRow(team2.team, team2.flag, result?.score2 || "", winner?.team === team2.team),
             '</div>'
         ].join("");
     }
