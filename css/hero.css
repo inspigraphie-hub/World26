@@ -296,35 +296,35 @@ RESPONSIVE
 
 .hero{
 
-    margin:20px auto 34px;
+    margin:12px auto 22px;
 
 }
 
 .hero h1{
 
-    font-size:40px;
-    margin-bottom:20px;
+    font-size:34px;
+    margin-bottom:12px;
     letter-spacing:0;
 
 }
 
 .hero h2{
 
-    font-size:21px;
+    font-size:18px;
 
 }
 
 .hero-image{
 
-    width:260px;
+    width:220px;
 
-    height:195px;
+    height:160px;
 
 }
 
 .trophy{
 
-    width:74px;
+    width:62px;
 
 }
 

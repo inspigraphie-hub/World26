@@ -28,6 +28,7 @@ class FanExperience {
             this.quickRankings = data[7] || this.quickRankings;
 
             this.renderPulse();
+            this.renderTicker();
             this.renderCountdown();
             this.renderQuickRankings();
             this.enhanceMatchCards();
@@ -36,6 +37,7 @@ class FanExperience {
                 this.matches = event.detail?.matches || this.matches;
                 this.standings = this.buildStandingsFromMatches(this.matches, this.standings);
                 this.renderPulse();
+                this.renderTicker();
                 this.renderCountdown();
                 this.renderQuickRankings();
             });
@@ -258,6 +260,27 @@ class FanExperience {
             next ? "<span><i class=\"fa-solid fa-bolt\"></i>Prochain : " + next.Domicile + " - " + next.Exterieur + "</span>" : ""
         ].filter(Boolean).join("");
         containers.forEach(container => container.innerHTML = chips);
+    }
+
+    renderTicker() {
+        const ticker = document.getElementById("quickTicker");
+        if(!ticker) return;
+        const today = this.todayKey();
+        const todayMatches = this.sortUpcomingFirst(this.matches.filter(match => match.Date === today));
+        const next = this.nextUpcomingMatch();
+        const latest = this.sortUpcomingFirst(this.matches).find(match => this.statusKey(match) === "done");
+
+        let text = "Coupe du Monde 2026 : scores, tableau et stats à jour";
+        if(todayMatches.length > 0) {
+            const first = todayMatches[0];
+            text = todayMatches.length + " match" + (todayMatches.length > 1 ? "s" : "") + " aujourd'hui : " + first.Domicile + " - " + first.Exterieur + (first.Heure ? " à " + first.Heure : "");
+        } else if(next) {
+            text = "Prochain match : " + next.Domicile + " - " + next.Exterieur + " (" + next.Date + (next.Heure ? " à " + next.Heure : "") + ")";
+        } else if(latest) {
+            text = "Dernier résultat : " + latest.Domicile + " " + (latest["Score Domicile"] || "-") + " - " + (latest["Score Exterieur"] || "-") + " " + latest.Exterieur;
+        }
+
+        ticker.innerHTML = "<i class=\"fa-solid fa-bolt\" aria-hidden=\"true\"></i><span>" + text + "</span>";
     }
 
     renderFavoriteTools() {
