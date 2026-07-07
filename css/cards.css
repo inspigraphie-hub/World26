@@ -1125,7 +1125,7 @@ TABLEAU FINAL
 
 .bracket-column{
     display:grid;
-    grid-template-rows:repeat(8, 154px);
+    grid-template-rows:repeat(8, 196px);
     align-items:center;
 }
 
