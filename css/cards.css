@@ -1998,11 +1998,24 @@ FAN HUB
         grid-template-rows:repeat(8, 214px) !important;
     }
 
+    .bracket-column.round-32{
+        grid-template-rows:repeat(8, 236px) !important;
+    }
+
     .bracket-match{
         padding:8px;
         border-radius:16px;
         box-sizing:border-box;
         min-height:0;
+    }
+
+    .round-32 .bracket-match{
+        align-self:start;
+        margin-top:8px;
+    }
+
+    .round-32 .bracket-match::after{
+        display:none !important;
     }
 
     .bracket-label{
