@@ -1987,6 +1987,55 @@ FAN HUB
     }
 }
 
+@media(max-width:700px){
+    .bracket-container{
+        min-width:1540px;
+        grid-template-columns:190px 155px 155px 140px 185px 140px 155px 155px 190px;
+        gap:20px;
+    }
+
+    .bracket-column{
+        grid-template-rows:repeat(8, 214px) !important;
+    }
+
+    .bracket-match{
+        padding:8px;
+        border-radius:16px;
+        box-sizing:border-box;
+        min-height:0;
+    }
+
+    .bracket-label{
+        margin-bottom:7px;
+        font-size:10px;
+        line-height:1.15;
+    }
+
+    .bracket-status{
+        padding:3px 7px;
+        font-size:9px;
+    }
+
+    .bracket-team{
+        grid-template-columns:28px minmax(0,1fr) 38px;
+        gap:6px;
+        padding:7px;
+        margin-bottom:5px;
+    }
+
+    .bracket-team span{
+        font-size:11px;
+        line-height:1.1;
+    }
+
+    .bracket-score{
+        width:36px;
+        min-width:36px;
+        height:26px;
+        font-size:12px;
+    }
+}
+
 
 .matches-section-title{
     margin:34px 0 18px;

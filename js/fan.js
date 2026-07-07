@@ -105,10 +105,10 @@ class FanExperience {
         const fixtures = [
             { date: "04/07/2026", display: "4-juil", hour: "19:00", home: "Canada", away: "Maroc", scoreHome: "0", scoreAway: "3", status: "Terminé", winner: "Maroc" },
             { date: "04/07/2026", display: "4-juil", hour: "23:00", home: "Paraguay", away: "France", scoreHome: "0", scoreAway: "1", status: "Terminé", winner: "France" },
-            { date: "05/07/2026", display: "5-juil", hour: "22:00", home: "Brésil", away: "Norvège" },
-            { date: "06/07/2026", display: "6-juil", hour: "02:00", home: "Mexique", away: "Angleterre" },
-            { date: "06/07/2026", display: "6-juil", hour: "21:00", home: "Portugal", away: "Espagne" },
-            { date: "07/07/2026", display: "7-juil", hour: "02:00", home: "États-Unis", away: "Belgique" },
+            { date: "05/07/2026", display: "5-juil", hour: "22:00", home: "Brésil", away: "Norvège", scoreHome: "1", scoreAway: "2", status: "Terminé", winner: "Norvège" },
+            { date: "06/07/2026", display: "6-juil", hour: "02:00", home: "Mexique", away: "Angleterre", scoreHome: "2", scoreAway: "3", status: "Terminé", winner: "Angleterre" },
+            { date: "06/07/2026", display: "6-juil", hour: "21:00", home: "Portugal", away: "Espagne", scoreHome: "0", scoreAway: "1", status: "Terminé", winner: "Espagne" },
+            { date: "07/07/2026", display: "7-juil", hour: "02:00", home: "États-Unis", away: "Belgique", scoreHome: "1", scoreAway: "4", status: "Terminé", winner: "Belgique" },
             { date: "07/07/2026", display: "7-juil", hour: "18:00", home: "Argentine", away: "Égypte" },
             { date: "07/07/2026", display: "7-juil", hour: "22:00", home: "Suisse", away: "Colombie" }
         ];
@@ -279,11 +279,9 @@ class FanExperience {
         if(!box) return;
         const next = this.nextMatchForTeam(team);
         const status = this.teamStatus(team);
-        const href = "equipe.html?team=" + encodeURIComponent(team);
         box.innerHTML = "<strong>" + team + "</strong>" +
             "<span>" + (status || "À suivre") + "</span>" +
-            "<span>" + (next ? "Prochain match : " + next.Date + " contre " + this.opponentFor(next, team) : "Aucun match à venir") + "</span>" +
-            "<a href=\"" + href + "\">Voir la page équipe</a>";
+            "<span>" + (next ? "Prochain match : " + next.Date + " contre " + this.opponentFor(next, team) : "Aucun match à venir") + "</span>";
     }
 
     renderCountdown() {
@@ -327,15 +325,13 @@ class FanExperience {
     }
 
     enhanceMatchCards() {
-        this.linkTeams();
+        this.unlinkTeams();
     }
 
-    linkTeams() {
+    unlinkTeams() {
         document.querySelectorAll(".team h3").forEach(name => {
-            if(name.querySelector("a")) return;
-            const team = name.textContent.trim();
-            if(!team) return;
-            name.innerHTML = "<a href=\"equipe.html?team=" + encodeURIComponent(team) + "\">" + team + "</a>";
+            const link = name.querySelector("a");
+            if(link) name.textContent = link.textContent;
         });
     }
 

@@ -1,7 +1,13 @@
 {
-  "updatedAt": "2026-07-05T11:55:47.938Z",
-  "source": "manual-round-of-16-maroc-france-update",
+  "updatedAt": "2026-07-07T12:55:44.508Z",
+  "source": "manual-round-of-16-july-7-update",
   "scorers": [
+    {
+      "Rang": 1,
+      "Joueurs": "Erling Haaland",
+      "Buts": 7,
+      "Photo": "haaland.png"
+    },
     {
       "Rang": 1,
       "Joueurs": "Kylian Mbappé",
@@ -15,28 +21,10 @@
       "Photo": "messi.png"
     },
     {
-      "Rang": 3,
-      "Joueurs": "Erling Haaland",
-      "Buts": 5,
-      "Photo": "haaland.png"
-    },
-    {
-      "Rang": 3,
+      "Rang": 4,
       "Joueurs": "Harry Kane",
-      "Buts": 5,
+      "Buts": 6,
       "Photo": "kane.png"
-    },
-    {
-      "Rang": 5,
-      "Joueurs": "Ismaïla Sarr",
-      "Buts": 4,
-      "Photo": "sarr.png"
-    },
-    {
-      "Rang": 5,
-      "Joueurs": "Ousmane Dembélé",
-      "Buts": 4,
-      "Photo": "dembele.png"
     }
   ],
   "assists": [
@@ -66,15 +54,9 @@
     },
     {
       "Rang": 4,
-      "Joueurs": "Florian Wirtz",
+      "Joueurs": "Andreas Schjelderup",
       "Passes D.": 3,
-      "Photo": "wirtz.png"
-    },
-    {
-      "Rang": 4,
-      "Joueurs": "Martin Ødegaard",
-      "Passes D.": 3,
-      "Photo": "odegaard.png"
+      "Photo": "schjelderup.png"
     }
   ]
 }

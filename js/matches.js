@@ -272,7 +272,11 @@
     roundResultFor(id) {
         const results = {
             M89: { score1: "0", score2: "1" },
-            M90: { score1: "0", score2: "3" }
+            M90: { score1: "0", score2: "3" },
+            M91: { score1: "1", score2: "2" },
+            M92: { score1: "2", score2: "3" },
+            M93: { score1: "0", score2: "1" },
+            M94: { score1: "1", score2: "4" }
         };
         return results[id] || null;
     }

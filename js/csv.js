@@ -171,10 +171,10 @@ class MatchManager {
         const fixtures = [
             { date: "04/07/2026", display: "4-juil", hour: "19:00", home: "Canada", away: "Maroc", homeFlag: "ca.png", awayFlag: "ma.png", scoreHome: "0", scoreAway: "3", status: "Terminé", winner: "Maroc" },
             { date: "04/07/2026", display: "4-juil", hour: "23:00", home: "Paraguay", away: "France", homeFlag: "py.png", awayFlag: "fr.png", scoreHome: "0", scoreAway: "1", status: "Terminé", winner: "France" },
-            { date: "05/07/2026", display: "5-juil", hour: "22:00", home: "Brésil", away: "Norvège", homeFlag: "br.png", awayFlag: "no.png" },
-            { date: "06/07/2026", display: "6-juil", hour: "02:00", home: "Mexique", away: "Angleterre", homeFlag: "mx.png", awayFlag: "gb-eng.png" },
-            { date: "06/07/2026", display: "6-juil", hour: "21:00", home: "Portugal", away: "Espagne", homeFlag: "pt.png", awayFlag: "es.png" },
-            { date: "07/07/2026", display: "7-juil", hour: "02:00", home: "États-Unis", away: "Belgique", homeFlag: "us.png", awayFlag: "be.png" },
+            { date: "05/07/2026", display: "5-juil", hour: "22:00", home: "Brésil", away: "Norvège", homeFlag: "br.png", awayFlag: "no.png", scoreHome: "1", scoreAway: "2", status: "Terminé", winner: "Norvège" },
+            { date: "06/07/2026", display: "6-juil", hour: "02:00", home: "Mexique", away: "Angleterre", homeFlag: "mx.png", awayFlag: "gb-eng.png", scoreHome: "2", scoreAway: "3", status: "Terminé", winner: "Angleterre" },
+            { date: "06/07/2026", display: "6-juil", hour: "21:00", home: "Portugal", away: "Espagne", homeFlag: "pt.png", awayFlag: "es.png", scoreHome: "0", scoreAway: "1", status: "Terminé", winner: "Espagne" },
+            { date: "07/07/2026", display: "7-juil", hour: "02:00", home: "États-Unis", away: "Belgique", homeFlag: "us.png", awayFlag: "be.png", scoreHome: "1", scoreAway: "4", status: "Terminé", winner: "Belgique" },
             { date: "07/07/2026", display: "7-juil", hour: "18:00", home: "Argentine", away: "Égypte", homeFlag: "ar.png", awayFlag: "eg.png" },
             { date: "07/07/2026", display: "7-juil", hour: "22:00", home: "Suisse", away: "Colombie", homeFlag: "ch.png", awayFlag: "co.png" }
         ];
