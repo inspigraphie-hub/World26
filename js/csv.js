@@ -175,7 +175,7 @@ class MatchManager {
             { date: "06/07/2026", display: "6-juil", hour: "02:00", home: "Mexique", away: "Angleterre", homeFlag: "mx.png", awayFlag: "gb-eng.png", scoreHome: "2", scoreAway: "3", status: "Terminé", winner: "Angleterre" },
             { date: "06/07/2026", display: "6-juil", hour: "21:00", home: "Portugal", away: "Espagne", homeFlag: "pt.png", awayFlag: "es.png", scoreHome: "0", scoreAway: "1", status: "Terminé", winner: "Espagne" },
             { date: "07/07/2026", display: "7-juil", hour: "02:00", home: "États-Unis", away: "Belgique", homeFlag: "us.png", awayFlag: "be.png", scoreHome: "1", scoreAway: "4", status: "Terminé", winner: "Belgique" },
-            { date: "07/07/2026", display: "7-juil", hour: "18:00", home: "Argentine", away: "Égypte", homeFlag: "ar.png", awayFlag: "eg.png" },
+            { date: "07/07/2026", display: "7-juil", hour: "18:00", home: "Argentine", away: "?gypte", homeFlag: "ar.png", awayFlag: "eg.png", scoreHome: "3", scoreAway: "2", status: "Termin?", winner: "Argentine" },
             { date: "07/07/2026", display: "7-juil", hour: "22:00", home: "Suisse", away: "Colombie", homeFlag: "ch.png", awayFlag: "co.png" }
         ];
 

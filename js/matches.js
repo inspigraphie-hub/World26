@@ -276,7 +276,8 @@
             M91: { score1: "1", score2: "2" },
             M92: { score1: "2", score2: "3" },
             M93: { score1: "0", score2: "1" },
-            M94: { score1: "1", score2: "4" }
+            M94: { score1: "1", score2: "4" },
+            M95: { score1: "3", score2: "2" }
         };
         return results[id] || null;
     }

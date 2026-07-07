@@ -1,24 +1,24 @@
 {
-  "updatedAt": "2026-07-07T12:55:44.508Z",
-  "source": "manual-round-of-16-july-7-update",
+  "updatedAt": "2026-07-07T21:31:00.492Z",
+  "source": "manual-argentina-egypt-update",
   "scorers": [
     {
       "Rang": 1,
+      "Joueurs": "Lionel Messi",
+      "Buts": 8,
+      "Photo": "messi.png"
+    },
+    {
+      "Rang": 2,
       "Joueurs": "Erling Haaland",
       "Buts": 7,
       "Photo": "haaland.png"
     },
     {
-      "Rang": 1,
-      "Joueurs": "Kylian Mbappé",
+      "Rang": 2,
+      "Joueurs": "Kylian Mbapp?",
       "Buts": 7,
       "Photo": "mbappe.png"
-    },
-    {
-      "Rang": 1,
-      "Joueurs": "Lionel Messi",
-      "Buts": 7,
-      "Photo": "messi.png"
     },
     {
       "Rang": 4,

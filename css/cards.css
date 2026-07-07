@@ -2103,25 +2103,37 @@ FAN HUB
     color:#066af6;
 }
 
-.today-separator,
-.score-number{
-    background:#111;
-    color:#fff;
-    border-radius:999px;
-}
-
 .score-number{
     min-width:88px;
-    padding:7px 12px;
+    padding:0;
     display:inline-flex;
     flex-direction:column;
     align-items:center;
     justify-content:center;
-    line-height:1;
+    line-height:1.05;
+    background:transparent;
+    color:#111;
+    border-radius:0;
 }
 
 .match-card:hover .score-number{
-    color:#fff;
+    color:#111;
+    transform:none;
+}
+
+.score-main{
+    font-weight:900;
+}
+
+.score-penalties{
+    margin-top:6px;
+    padding:4px 9px;
+    border-radius:999px;
+    background:rgba(124,58,237,.10);
+    color:#6d35d9;
+    font-size:11px;
+    line-height:1;
+    font-weight:900;
 }
 
 .team.winner h3,
@@ -2181,13 +2193,13 @@ FAN HUB
 
     .score-number{
         min-width:46px;
-        padding:6px 8px;
+        padding:0;
         font-size:16px;
     }
 
     .today-separator{
-        background:#111;
-        color:#fff;
+        background:#f4f4f4;
+        color:#111;
     }
 
     .site-pulse{
