@@ -277,23 +277,49 @@
             M92: { score1: "2", score2: "3" },
             M93: { score1: "0", score2: "1" },
             M94: { score1: "1", score2: "4" },
-            M95: { score1: "3", score2: "2" }
+            M95: { score1: "3", score2: "2" },
+            M96: { score1: "0 (4)", score2: "0 (3)" },
+            M97: { score1: "2", score2: "0" }
         };
         return results[id] || null;
     }
 
     winnerFromProjectedResult(team1, team2, result) {
-        const score1 = Number(result.score1);
-        const score2 = Number(result.score2);
-        if(Number.isNaN(score1) || Number.isNaN(score2) || score1 === score2) return null;
-        return score1 > score2 ? team1 : team2;
+        const scores = this.projectedScoreParts(result);
+        if(scores.score1 !== scores.score2) return scores.score1 > scores.score2 ? team1 : team2;
+        if(scores.penalty1 !== null && scores.penalty2 !== null && scores.penalty1 !== scores.penalty2) {
+            return scores.penalty1 > scores.penalty2 ? team1 : team2;
+        }
+        return null;
     }
 
     loserFromProjectedResult(team1, team2, result) {
-        const score1 = Number(result.score1);
-        const score2 = Number(result.score2);
-        if(Number.isNaN(score1) || Number.isNaN(score2) || score1 === score2) return null;
-        return score1 < score2 ? team1 : team2;
+        const scores = this.projectedScoreParts(result);
+        if(scores.score1 !== scores.score2) return scores.score1 < scores.score2 ? team1 : team2;
+        if(scores.penalty1 !== null && scores.penalty2 !== null && scores.penalty1 !== scores.penalty2) {
+            return scores.penalty1 < scores.penalty2 ? team1 : team2;
+        }
+        return null;
+    }
+
+    projectedScoreParts(result) {
+        const left = this.splitScoreWithPenalty(result.score1);
+        const right = this.splitScoreWithPenalty(result.score2);
+        return {
+            score1: left.score,
+            score2: right.score,
+            penalty1: left.penalty,
+            penalty2: right.penalty
+        };
+    }
+
+    splitScoreWithPenalty(value) {
+        const match = String(value || "").match(/^(\d+)(?:\s*\((\d+)\))?$/);
+        if(!match) return { score: NaN, penalty: null };
+        return {
+            score: Number(match[1]),
+            penalty: match[2] === undefined ? null : Number(match[2])
+        };
     }
 
     emptyOrProjectedMatch(teams, index, result = null, winner = null) {

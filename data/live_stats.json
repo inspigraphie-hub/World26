@@ -1,7 +1,13 @@
 {
-  "updatedAt": "2026-07-07T21:31:00.492Z",
-  "source": "manual-argentina-egypt-update",
+  "updatedAt": "2026-07-10T20:24:25.238Z",
+  "source": "manual-quarter-france-maroc-update",
   "scorers": [
+    {
+      "Rang": 1,
+      "Joueurs": "Kylian Mbappé",
+      "Buts": 8,
+      "Photo": "mbappe.png"
+    },
     {
       "Rang": 1,
       "Joueurs": "Lionel Messi",
@@ -9,22 +15,22 @@
       "Photo": "messi.png"
     },
     {
-      "Rang": 2,
+      "Rang": 3,
       "Joueurs": "Erling Haaland",
       "Buts": 7,
       "Photo": "haaland.png"
-    },
-    {
-      "Rang": 2,
-      "Joueurs": "Kylian Mbapp?",
-      "Buts": 7,
-      "Photo": "mbappe.png"
     },
     {
       "Rang": 4,
       "Joueurs": "Harry Kane",
       "Buts": 6,
       "Photo": "kane.png"
+    },
+    {
+      "Rang": 5,
+      "Joueurs": "Ousmane Dembélé",
+      "Buts": 5,
+      "Photo": "dembele.png"
     }
   ],
   "assists": [
@@ -51,12 +57,6 @@
       "Joueurs": "Alexander Isak",
       "Passes D.": 3,
       "Photo": "isak.png"
-    },
-    {
-      "Rang": 4,
-      "Joueurs": "Andreas Schjelderup",
-      "Passes D.": 3,
-      "Photo": "schjelderup.png"
     }
   ]
 }

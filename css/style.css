@@ -147,6 +147,30 @@ body.is-loading{
     100%{ opacity:0; transform:translate(-50%, -72%) scale(.82); filter:drop-shadow(0 0 8px rgba(255,213,74,.2)); }
 }
 
+@media(max-width:700px){
+    .logo-loader-mark{
+        width:min(170px, 52vw);
+        height:min(270px, 74vw);
+    }
+
+    .loader-two,
+    .loader-six{
+        width:64%;
+    }
+
+    .loader-two{
+        top:18%;
+    }
+
+    .loader-six{
+        bottom:13%;
+    }
+
+    .loader-trophy{
+        width:34%;
+    }
+}
+
 /* ===========================
    VARIABLES
 =========================== */

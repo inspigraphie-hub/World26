@@ -2221,6 +2221,66 @@ FAN HUB
     }
 }
 
+@media(max-width:700px){
+    .bracket-wrapper{
+        overflow:auto;
+        touch-action:pan-x pan-y pinch-zoom;
+        -webkit-overflow-scrolling:touch;
+    }
+
+    .bracket-container{
+        min-width:1180px;
+        grid-template-columns:145px 122px 122px 108px 145px 108px 122px 122px 145px;
+        gap:14px;
+    }
+
+    .bracket-column{
+        grid-template-rows:repeat(8, 186px) !important;
+    }
+
+    .bracket-column.round-32{
+        grid-template-rows:repeat(8, 202px) !important;
+    }
+
+    .bracket-match{
+        padding:7px;
+        border-radius:14px;
+    }
+
+    .bracket-label{
+        font-size:9px;
+        margin-bottom:6px;
+    }
+
+    .bracket-status{
+        font-size:8px;
+        padding:3px 6px;
+    }
+
+    .bracket-team{
+        grid-template-columns:23px minmax(0,1fr) 32px;
+        gap:5px;
+        padding:6px;
+    }
+
+    .bracket-team img,
+    .bracket-empty{
+        width:23px;
+        height:16px;
+    }
+
+    .bracket-team span{
+        font-size:9px;
+    }
+
+    .bracket-score{
+        width:30px;
+        min-width:30px;
+        height:24px;
+        font-size:10px;
+    }
+}
+
 
 .matches-section-title{
     margin:34px 0 18px;

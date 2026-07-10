@@ -111,8 +111,9 @@ class FanExperience {
             { date: "06/07/2026", display: "6-juil", hour: "02:00", home: "Mexique", away: "Angleterre", scoreHome: "2", scoreAway: "3", status: "Terminé", winner: "Angleterre" },
             { date: "06/07/2026", display: "6-juil", hour: "21:00", home: "Portugal", away: "Espagne", scoreHome: "0", scoreAway: "1", status: "Terminé", winner: "Espagne" },
             { date: "07/07/2026", display: "7-juil", hour: "02:00", home: "États-Unis", away: "Belgique", scoreHome: "1", scoreAway: "4", status: "Terminé", winner: "Belgique" },
-            { date: "07/07/2026", display: "7-juil", hour: "18:00", home: "Argentine", away: "?gypte", scoreHome: "3", scoreAway: "2", status: "Termin?", winner: "Argentine" },
-            { date: "07/07/2026", display: "7-juil", hour: "22:00", home: "Suisse", away: "Colombie" }
+            { date: "07/07/2026", display: "7-juil", hour: "18:00", phase: "Huitièmes de finale", home: "Argentine", away: "Égypte", scoreHome: "3", scoreAway: "2", status: "Terminé", winner: "Argentine" },
+            { date: "07/07/2026", display: "7-juil", hour: "22:00", phase: "Huitièmes de finale", home: "Suisse", away: "Colombie", scoreHome: "0 (4)", scoreAway: "0 (3)", status: "Terminé", winner: "Suisse" },
+            { date: "09/07/2026", display: "9-juil", hour: "21:00", phase: "Quarts de finale", home: "France", away: "Maroc", scoreHome: "2", scoreAway: "0", status: "Terminé", winner: "France" }
         ];
 
         return fixtures.map(fixture => ({
