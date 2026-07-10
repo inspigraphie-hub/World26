@@ -1205,6 +1205,7 @@ TABLEAU FINAL
     color:#777;
     margin-bottom:8px;
     text-align:center;
+    line-height:1.2;
 }
 
 .bracket-status{
@@ -1216,6 +1217,7 @@ TABLEAU FINAL
     color:#111;
     font-size:10px;
     font-weight:900;
+    white-space:nowrap;
 }
 
 .bracket-team{

@@ -266,7 +266,37 @@
             loser
         };
 
-        return this.emptyOrProjectedMatch([team1, team2], index, result, winner);
+        return this.emptyOrProjectedMatch(id, [team1, team2], index, result, winner);
+    }
+
+    matchScheduleFor(id) {
+        const schedules = {
+            M89: { label: "Sam. 04/07", hour: "23:00", status: "Terminé" },
+            M90: { label: "Sam. 04/07", hour: "19:00", status: "Terminé" },
+            M91: { label: "Dim. 05/07", hour: "22:00", status: "Terminé" },
+            M92: { label: "Lun. 06/07", hour: "02:00", status: "Terminé" },
+            M93: { label: "Lun. 06/07", hour: "21:00", status: "Terminé" },
+            M94: { label: "Mar. 07/07", hour: "02:00", status: "Terminé" },
+            M95: { label: "Mar. 07/07", hour: "18:00", status: "Terminé" },
+            M96: { label: "Mar. 07/07", hour: "22:00", status: "Term. (TB)" },
+            M97: { label: "Jeu. 09/07", hour: "21:00", status: "Terminé" },
+            M98: { label: "Sam. 11/07", hour: "23:00", status: "À venir" },
+            M99: { label: "Aujourd'hui", hour: "21:00", status: "En cours 36'" },
+            M100: { label: "Dim. 12/07", hour: "03:00", status: "À venir" },
+            M101: { label: "Mar. 14/07", hour: "21:00", status: "À venir" },
+            M102: { label: "Mer. 15/07", hour: "21:00", status: "À venir" },
+            final: { label: "Dim. 19/07", hour: "21:00", status: "À venir" },
+            third: { label: "Sam. 18/07", hour: "23:00", status: "À venir" }
+        };
+        return schedules[id] || null;
+    }
+
+    scheduleLabel(id) {
+        const schedule = this.matchScheduleFor(id);
+        if(!schedule) return "";
+        const meta = [schedule.label, schedule.hour].filter(Boolean).join(" • ");
+        const status = schedule.status ? ' <span class="bracket-status">' + schedule.status + '</span>' : "";
+        return '<div class="bracket-label">' + meta + status + '</div>';
     }
 
     roundResultFor(id) {
@@ -279,12 +309,14 @@
             M94: { score1: "1", score2: "4" },
             M95: { score1: "3", score2: "2" },
             M96: { score1: "0 (4)", score2: "0 (3)" },
-            M97: { score1: "2", score2: "0" }
+            M97: { score1: "2", score2: "0" },
+            M99: { score1: "1", score2: "0", status: "En cours" }
         };
         return results[id] || null;
     }
 
     winnerFromProjectedResult(team1, team2, result) {
+        if(result.status && !this.normalize(result.status).includes("termine")) return null;
         const scores = this.projectedScoreParts(result);
         if(scores.score1 !== scores.score2) return scores.score1 > scores.score2 ? team1 : team2;
         if(scores.penalty1 !== null && scores.penalty2 !== null && scores.penalty1 !== scores.penalty2) {
@@ -294,6 +326,7 @@
     }
 
     loserFromProjectedResult(team1, team2, result) {
+        if(result.status && !this.normalize(result.status).includes("termine")) return null;
         const scores = this.projectedScoreParts(result);
         if(scores.score1 !== scores.score2) return scores.score1 < scores.score2 ? team1 : team2;
         if(scores.penalty1 !== null && scores.penalty2 !== null && scores.penalty1 !== scores.penalty2) {
@@ -322,12 +355,13 @@
         };
     }
 
-    emptyOrProjectedMatch(teams, index, result = null, winner = null) {
+    emptyOrProjectedMatch(id, teams, index, result = null, winner = null) {
         const team1 = teams[0] || { team: "À déterminer", flag: "" };
         const team2 = teams[1] || { team: "À déterminer", flag: "" };
 
         return [
             '<div class="bracket-match reveal-bracket" style="animation-delay:' + (index * 0.05) + 's">',
+            this.scheduleLabel(id),
             this.teamRow(team1.team, team1.flag, result?.score1 || "", winner?.team === team1.team),
             this.teamRow(team2.team, team2.flag, result?.score2 || "", winner?.team === team2.team),
             '</div>'
@@ -360,6 +394,7 @@
         return [
             '<div class="bracket-match bracket-final reveal-bracket" style="animation-delay:' + (index * 0.05) + 's">',
             '<div class="bracket-final-title">' + title + '</div>',
+            this.scheduleLabel(useLosers ? "third" : "final"),
             this.teamRow(team1.team, team1.flag, ""),
             this.teamRow(team2.team, team2.flag, ""),
             '</div>'
