@@ -157,40 +157,57 @@
         const matchesById = this.buildMatchMap(round32);
         const leftRound32 = round32.slice(0,8);
         const rightRound32 = round32.slice(8,16);
+        const leftRoundEight = [
+            this.projectedMatch("M89", ["M73", "M74"], matchesById, 8),
+            this.projectedMatch("M90", ["M75", "M76"], matchesById, 9),
+            this.projectedMatch("M91", ["M77", "M78"], matchesById, 10),
+            this.projectedMatch("M92", ["M79", "M80"], matchesById, 11)
+        ].join("");
+        const leftQuarters = [
+            this.projectedMatch("M97", ["M89", "M90"], matchesById, 12),
+            this.projectedMatch("M98", ["M91", "M92"], matchesById, 13)
+        ].join("");
+        const leftSemi = this.projectedMatch("M101", ["M97", "M98"], matchesById, 14);
+        const rightRoundEight = [
+            this.projectedMatch("M93", ["M81", "M82"], matchesById, 20),
+            this.projectedMatch("M94", ["M83", "M84"], matchesById, 21),
+            this.projectedMatch("M95", ["M85", "M86"], matchesById, 22),
+            this.projectedMatch("M96", ["M87", "M88"], matchesById, 23)
+        ].join("");
+        const rightQuarters = [
+            this.projectedMatch("M99", ["M93", "M94"], matchesById, 18),
+            this.projectedMatch("M100", ["M95", "M96"], matchesById, 19)
+        ].join("");
+        const rightSemi = this.projectedMatch("M102", ["M99", "M100"], matchesById, 17);
+        const finals = [
+            this.finalMatch("Finale", ["M101", "M102"], matchesById, 15),
+            this.finalMatch("3e place", ["M101", "M102"], matchesById, 16, true)
+        ].join("");
 
         const html = [
             '<div class="bracket-column round-32" data-round="round-32">',
             leftRound32.map((match,index) => this.matchBox(match, index)).join(""),
             '</div>',
             '<div class="bracket-column round-eight-finals" data-round="round-eight-finals">',
-            this.projectedMatch("M89", ["M73", "M74"], matchesById, 8),
-            this.projectedMatch("M90", ["M75", "M76"], matchesById, 9),
-            this.projectedMatch("M91", ["M77", "M78"], matchesById, 10),
-            this.projectedMatch("M92", ["M79", "M80"], matchesById, 11),
+            leftRoundEight,
             '</div>',
             '<div class="bracket-column round-quarter-finals" data-round="round-quarter-finals">',
-            this.projectedMatch("M97", ["M89", "M90"], matchesById, 12),
-            this.projectedMatch("M98", ["M91", "M92"], matchesById, 13),
+            leftQuarters,
             '</div>',
             '<div class="bracket-column round-semi-finals" data-round="round-semi-finals">',
-            this.projectedMatch("M101", ["M97", "M98"], matchesById, 14),
+            leftSemi,
             '</div>',
             '<div class="bracket-column round-finals" data-round="round-finals">',
-            this.finalMatch("Finale", ["M101", "M102"], matchesById, 15),
-            this.finalMatch("3e place", ["M101", "M102"], matchesById, 16, true),
+            finals,
             '</div>',
             '<div class="bracket-column round-semi-finals" data-round="round-semi-finals">',
-            this.projectedMatch("M102", ["M99", "M100"], matchesById, 17),
+            rightSemi,
             '</div>',
             '<div class="bracket-column round-quarter-finals" data-round="round-quarter-finals">',
-            this.projectedMatch("M99", ["M93", "M94"], matchesById, 18),
-            this.projectedMatch("M100", ["M95", "M96"], matchesById, 19),
+            rightQuarters,
             '</div>',
             '<div class="bracket-column round-eight-finals" data-round="round-eight-finals">',
-            this.projectedMatch("M93", ["M81", "M82"], matchesById, 20),
-            this.projectedMatch("M94", ["M83", "M84"], matchesById, 21),
-            this.projectedMatch("M95", ["M85", "M86"], matchesById, 22),
-            this.projectedMatch("M96", ["M87", "M88"], matchesById, 23),
+            rightRoundEight,
             '</div>',
             '<div class="bracket-column round-32" data-round="round-32">',
             rightRound32.map((match,index) => this.matchBox(match, index + 24)).join(""),
@@ -280,8 +297,8 @@
             M95: { label: "Mar. 07/07", hour: "18:00", status: "Terminé" },
             M96: { label: "Mar. 07/07", hour: "22:00", status: "Term. (TB)" },
             M97: { label: "Jeu. 09/07", hour: "21:00", status: "Terminé" },
-            M98: { label: "Sam. 11/07", hour: "23:00", status: "À venir" },
-            M99: { label: "Aujourd'hui", hour: "21:00", status: "En cours 36'" },
+            M98: { label: "Aujourd'hui", hour: "21:00", status: "En cours 36'" },
+            M99: { label: "Sam. 11/07", hour: "23:00", status: "À venir" },
             M100: { label: "Dim. 12/07", hour: "03:00", status: "À venir" },
             M101: { label: "Mar. 14/07", hour: "21:00", status: "À venir" },
             M102: { label: "Mer. 15/07", hour: "21:00", status: "À venir" },
@@ -310,7 +327,7 @@
             M95: { score1: "3", score2: "2" },
             M96: { score1: "0 (4)", score2: "0 (3)" },
             M97: { score1: "2", score2: "0" },
-            M99: { score1: "1", score2: "0", status: "En cours" }
+            M98: { score1: "1", score2: "0", status: "En cours" }
         };
         return results[id] || null;
     }

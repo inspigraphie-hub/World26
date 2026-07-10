@@ -99,7 +99,7 @@ body.is-loading{
 .loader-six{
     width:68%;
     left:50%;
-    bottom:12%;
+    bottom:8%;
     transform:translateX(-50%);
     animation:loaderSix 1.45s .42s cubic-bezier(.18,.88,.32,1.18) both;
 }
@@ -163,7 +163,7 @@ body.is-loading{
     }
 
     .loader-six{
-        bottom:13%;
+        bottom:9%;
     }
 
     .loader-trophy{
