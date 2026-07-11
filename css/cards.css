@@ -333,12 +333,58 @@ GRID MATCHS GROUPES
 
 #matchesContainer{
 
-    display:grid;
+    display:flex;
 
-    grid-template-columns:repeat(auto-fit,minmax(360px,1fr));
+    flex-direction:column;
 
     gap:35px;
 
+}
+
+.matches-list-section{
+    display:flex;
+    flex-direction:column;
+    gap:18px;
+}
+
+.matches-section-head{
+    display:flex;
+    align-items:flex-end;
+    justify-content:space-between;
+    gap:18px;
+}
+
+.matches-section-head span{
+    display:inline-flex;
+    margin-bottom:5px;
+    color:#777;
+    font-size:12px;
+    font-weight:900;
+    text-transform:uppercase;
+}
+
+.matches-section-head h3{
+    margin:0;
+    font-size:clamp(1.45rem,2.3vw,2.3rem);
+    line-height:1;
+    font-weight:900;
+    letter-spacing:-.02em;
+}
+
+.matches-section-head b{
+    flex:0 0 auto;
+    padding:8px 12px;
+    border-radius:999px;
+    background:#f2f2f2;
+    color:#555;
+    font-size:12px;
+    font-weight:900;
+}
+
+.matches-section-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(360px,1fr));
+    gap:24px;
 }
 
 /*==========================================
@@ -2301,4 +2347,47 @@ FAN HUB
 
 .matches-section-title:first-child{
     margin-top:0;
+}
+
+@media(max-width:700px){
+    #matchesContainer{
+        display:flex;
+        flex-direction:column;
+        gap:28px;
+    }
+
+    .matches-list-section{
+        gap:13px;
+    }
+
+    .matches-section-head{
+        align-items:center;
+        gap:10px;
+    }
+
+    .matches-section-head span{
+        font-size:10px;
+        margin-bottom:3px;
+    }
+
+    .matches-section-head h3{
+        font-size:24px;
+    }
+
+    .matches-section-head b{
+        padding:7px 10px;
+        font-size:11px;
+    }
+
+    .matches-section-grid{
+        display:grid;
+        grid-template-columns:repeat(2,minmax(0,1fr));
+        gap:9px;
+    }
+}
+
+@media(max-width:380px){
+    .matches-section-grid{
+        grid-template-columns:1fr;
+    }
 }

@@ -271,7 +271,7 @@ class MatchManager {
         this.container.innerHTML = "";
 
         if (matches.length === 0) {
-            this.container.innerHTML = `<div class="empty-state">Aucun match ne correspond à ce filtre.</div>`;
+            this.container.innerHTML = '<div class="empty-state">Aucun match ne correspond ? ce filtre.</div>';
             document.dispatchEvent(new Event("matches:updated"));
             return;
         }
@@ -281,24 +281,35 @@ class MatchManager {
             const finished = this.sortFinishedMatches(matches.filter(match => this.statusKey(match) === "done"));
 
             if (upcoming.length) {
-                this.container.insertAdjacentHTML("beforeend", `<h3 class="matches-section-title">Matchs à suivre</h3>`);
-                upcoming.forEach((match, index) => this.container.insertAdjacentHTML("beforeend", this.createCard(match, index)));
+                this.container.insertAdjacentHTML("beforeend", this.matchSection("Matchs à venir", "Les prochains rendez-vous", upcoming, 0));
             }
 
             if (finished.length) {
-                this.container.insertAdjacentHTML("beforeend", `<h3 class="matches-section-title">Matchs terminés</h3>`);
-                finished.forEach((match, index) => this.container.insertAdjacentHTML("beforeend", this.createCard(match, index)));
+                this.container.insertAdjacentHTML("beforeend", this.matchSection("Matchs terminés", "Les derniers résultats", finished, upcoming.length));
             }
 
             document.dispatchEvent(new Event("matches:updated"));
             return;
         }
 
-        matches.forEach((match, index) => {
-            this.container.insertAdjacentHTML("beforeend", this.createCard(match, index));
-        });
-
+        this.container.insertAdjacentHTML("beforeend", this.matchSection("Matchs", "Résultats filtrés", matches, 0));
         document.dispatchEvent(new Event("matches:updated"));
+    }
+
+    matchSection(title, subtitle, matches, offset = 0) {
+        return `
+<section class="matches-list-section">
+    <div class="matches-section-head">
+        <div>
+            <span>${subtitle}</span>
+            <h3>${title}</h3>
+        </div>
+        <b>${matches.length} ${matches.length > 1 ? "matchs" : "match"}</b>
+    </div>
+    <div class="matches-section-grid">
+        ${matches.map((match, index) => this.createCard(match, index + offset)).join("")}
+    </div>
+</section>`;
     }
 
     createCard(match, index) {
