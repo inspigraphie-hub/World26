@@ -1,87 +1,63 @@
 {
-  "updatedAt": "2026-07-04T17:13:49.381Z",
+  "updatedAt": "2026-07-11T11:22:05.591Z",
   "bestAttack": [
     {
       "rank": 1,
       "team": "France",
-      "penalties": 0,
-      "goalsPerMatch": "3,25",
-      "played": 4,
-      "goals": 13
+      "goals": 16,
+      "value": "16 buts"
     },
     {
       "rank": 2,
-      "team": "Pays-Bas",
-      "penalties": 0,
-      "goalsPerMatch": "2,75",
-      "played": 4,
-      "goals": 11
+      "team": "Argentine",
+      "goals": 14,
+      "value": "14 buts"
     },
     {
       "rank": 3,
-      "team": "Allemagne",
-      "penalties": 1,
-      "goalsPerMatch": "2,75",
-      "played": 4,
-      "goals": 11
-    },
-    {
-      "rank": 4,
-      "team": "Argentine",
-      "penalties": 0,
-      "goalsPerMatch": "2,75",
-      "played": 4,
-      "goals": 11
-    },
-    {
-      "rank": 5,
-      "team": "?tats-Unis",
-      "penalties": 0,
-      "goalsPerMatch": "2,50",
-      "played": 4,
-      "goals": 10
+      "team": "Angleterre",
+      "goals": 11,
+      "value": "11 buts"
     }
   ],
   "bestDefense": [
     {
       "rank": 1,
-      "team": "Mexique",
-      "penalties": 0,
-      "goalsPerMatch": "0",
-      "played": 4,
-      "goals": 0
+      "team": "Espagne",
+      "goals": 1,
+      "value": "1 encaissé"
+    },
+    {
+      "rank": 2,
+      "team": "Colombie",
+      "goals": 1,
+      "value": "1 encaissé"
+    },
+    {
+      "rank": 3,
+      "team": "France",
+      "goals": 2,
+      "value": "2 encaissés"
+    }
+  ],
+  "inForm": [
+    {
+      "rank": 1,
+      "team": "France",
+      "points": 18,
+      "value": "18 pts"
     },
     {
       "rank": 2,
       "team": "Espagne",
-      "penalties": 0,
-      "goalsPerMatch": "0",
-      "played": 4,
-      "goals": 0
+      "points": 16,
+      "value": "16 pts"
     },
     {
       "rank": 3,
-      "team": "Colombie",
-      "penalties": 0,
-      "goalsPerMatch": "0,25",
-      "played": 4,
-      "goals": 1
-    },
-    {
-      "rank": 4,
-      "team": "Br?sil",
-      "penalties": 0,
-      "goalsPerMatch": "0,50",
-      "played": 4,
-      "goals": 2
-    },
-    {
-      "rank": 5,
-      "team": "Portugal",
-      "penalties": 0,
-      "goalsPerMatch": "0,50",
-      "played": 4,
-      "goals": 2
+      "team": "Argentine",
+      "points": 15,
+      "value": "15 pts"
     }
   ]
 }

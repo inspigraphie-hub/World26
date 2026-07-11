@@ -178,9 +178,10 @@ class MatchManager {
             { date: "07/07/2026", display: "7-juil", hour: "18:00", phase: "Huiti?mes de finale", home: "Argentine", away: "?gypte", homeFlag: "ar.png", awayFlag: "eg.png", scoreHome: "3", scoreAway: "2", status: "Termin?", winner: "Argentine" },
             { date: "07/07/2026", display: "7-juil", hour: "22:00", phase: "Huiti?mes de finale", home: "Suisse", away: "Colombie", homeFlag: "ch.png", awayFlag: "co.png", scoreHome: "0 (4)", scoreAway: "0 (3)", status: "Termin?", winner: "Suisse" },
             { date: "09/07/2026", display: "9-juil", hour: "21:00", phase: "Quarts de finale", home: "France", away: "Maroc", homeFlag: "fr.png", awayFlag: "ma.png", scoreHome: "2", scoreAway: "0", status: "Termin?", winner: "France" },
-            { date: "10/07/2026", display: "10-juil", hour: "21:00", phase: "Quarts de finale", home: "Espagne", away: "Belgique", homeFlag: "es.png", awayFlag: "be.png", scoreHome: "1", scoreAway: "0", status: "En cours", minute: "33", winner: "" },
+            { date: "10/07/2026", display: "10-juil", hour: "21:00", phase: "Quarts de finale", home: "Espagne", away: "Belgique", homeFlag: "es.png", awayFlag: "be.png", scoreHome: "2", scoreAway: "1", status: "Terminé", winner: "Espagne" },
             { date: "11/07/2026", display: "11-juil", hour: "23:00", phase: "Quarts de finale", home: "Norvège", away: "Angleterre", homeFlag: "no.png", awayFlag: "gb-eng.png", scoreHome: "", scoreAway: "", status: "À venir", winner: "" },
-            { date: "12/07/2026", display: "12-juil", hour: "03:00", phase: "Quarts de finale", home: "Argentine", away: "Suisse", homeFlag: "ar.png", awayFlag: "ch.png", scoreHome: "", scoreAway: "", status: "À venir", winner: "" }
+            { date: "12/07/2026", display: "12-juil", hour: "03:00", phase: "Quarts de finale", home: "Argentine", away: "Suisse", homeFlag: "ar.png", awayFlag: "ch.png", scoreHome: "", scoreAway: "", status: "À venir", winner: "" },
+            { date: "14/07/2026", display: "14-juil", hour: "21:00", phase: "Demi-finales", home: "France", away: "Espagne", homeFlag: "fr.png", awayFlag: "es.png", scoreHome: "", scoreAway: "", status: "À venir", winner: "" }
         ];
 
         return fixtures.map((fixture, index) => ({

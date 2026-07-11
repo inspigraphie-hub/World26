@@ -114,9 +114,10 @@ class FanExperience {
             { date: "07/07/2026", display: "7-juil", hour: "18:00", phase: "Huiti?mes de finale", home: "Argentine", away: "?gypte", scoreHome: "3", scoreAway: "2", status: "Termin?", winner: "Argentine" },
             { date: "07/07/2026", display: "7-juil", hour: "22:00", phase: "Huiti?mes de finale", home: "Suisse", away: "Colombie", scoreHome: "0 (4)", scoreAway: "0 (3)", status: "Termin?", winner: "Suisse" },
             { date: "09/07/2026", display: "9-juil", hour: "21:00", phase: "Quarts de finale", home: "France", away: "Maroc", scoreHome: "2", scoreAway: "0", status: "Termin?", winner: "France" },
-            { date: "10/07/2026", display: "10-juil", hour: "21:00", phase: "Quarts de finale", home: "Espagne", away: "Belgique", scoreHome: "1", scoreAway: "0", status: "En cours", minute: "33", winner: "" },
+            { date: "10/07/2026", display: "10-juil", hour: "21:00", phase: "Quarts de finale", home: "Espagne", away: "Belgique", scoreHome: "2", scoreAway: "1", status: "Terminé", winner: "Espagne" },
             { date: "11/07/2026", display: "11-juil", hour: "23:00", phase: "Quarts de finale", home: "Norvège", away: "Angleterre", scoreHome: "", scoreAway: "", status: "À venir", winner: "" },
-            { date: "12/07/2026", display: "12-juil", hour: "03:00", phase: "Quarts de finale", home: "Argentine", away: "Suisse", scoreHome: "", scoreAway: "", status: "À venir", winner: "" }
+            { date: "12/07/2026", display: "12-juil", hour: "03:00", phase: "Quarts de finale", home: "Argentine", away: "Suisse", scoreHome: "", scoreAway: "", status: "À venir", winner: "" },
+            { date: "14/07/2026", display: "14-juil", hour: "21:00", phase: "Demi-finales", home: "France", away: "Espagne", scoreHome: "", scoreAway: "", status: "À venir", winner: "" }
         ];
 
         return fixtures.map(fixture => ({
@@ -331,16 +332,17 @@ class FanExperience {
         if(!grid) return;
         const attacks = [...this.standings].sort((a,b) => Number(b.Bp || 0) - Number(a.Bp || 0));
         const defenses = [...this.standings].sort((a,b) => Number(a.Bc || 99) - Number(b.Bc || 99));
-        const quickAttack = (this.quickRankings.bestAttack || []).map(row => ({ label: row.team, value: row.goals + " buts" }));
-        const quickDefense = (this.quickRankings.bestDefense || []).map(row => ({ label: row.team, value: row.goals + " encaiss." }));
+        const quickAttack = (this.quickRankings.bestAttack || []).map(row => ({ label: row.team, value: row.value || row.goals + " buts" }));
+        const quickDefense = (this.quickRankings.bestDefense || []).map(row => ({ label: row.team, value: row.value || row.goals + " encaiss." }));
+        const quickForm = (this.quickRankings.inForm || []).map(row => ({ label: row.team, value: row.value || row.points + " pts" }));
         const qualified = this.standings.filter(team => Number(team.Pts || 0) >= 6).slice(0, 6);
         const upcoming = this.matches.filter(match => this.statusKey(match) !== "done").slice(0, 4);
         grid.innerHTML = [
             this.rankingCard("Top buteurs", "fa-futbol", "green", this.scorers.slice(0, 6).map(player => ({ label: player.Joueurs, value: player.Buts + " buts" }))),
             this.rankingCard("Top passeurs", "fa-wand-magic-sparkles", "cyan", this.assists.slice(0, 6).map(player => ({ label: player.Joueurs, value: player["Passes D."] + " passes" }))),
-            this.rankingCard("Meilleures attaques", "fa-bolt", "red", quickAttack.length ? quickAttack : attacks.slice(0, 5).map(team => ({ label: team["Ã‰quipe"], value: team.Bp + " BP" }))),
-            this.rankingCard("Meilleures défenses", "fa-shield-halved", "purple", quickDefense.length ? quickDefense : defenses.slice(0, 5).map(team => ({ label: team["Ã‰quipe"], value: team.Bc + " BC" }))),
-            this.rankingCard("Équipes en forme", "fa-trophy", "gold", qualified.map(team => ({ label: team["Équipe"], value: team.Pts + " pts" }))),
+            this.rankingCard("Meilleures attaques", "fa-bolt", "red", quickAttack.length ? quickAttack : attacks.slice(0, 5).map(team => ({ label: team["?quipe"], value: team.Bp + " BP" }))),
+            this.rankingCard("Meilleures d?fenses", "fa-shield-halved", "purple", quickDefense.length ? quickDefense : defenses.slice(0, 5).map(team => ({ label: team["?quipe"], value: team.Bc + " BC" }))),
+            this.rankingCard("?quipes en forme", "fa-trophy", "gold", quickForm.length ? quickForm : qualified.map(team => ({ label: team["?quipe"], value: team.Pts + " pts" }))),
             this.rankingCard("Prochains gros matchs", "fa-calendar-days", "dark", upcoming.map(match => ({ label: match.Domicile + " - " + match.Exterieur, value: match.Date })))
         ].join("");
     }

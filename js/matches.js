@@ -297,7 +297,7 @@
             M95: { label: "Mar. 07/07", hour: "18:00", status: "Terminé" },
             M96: { label: "Mar. 07/07", hour: "22:00", status: "Term. (TB)" },
             M97: { label: "Jeu. 09/07", hour: "21:00", status: "Terminé" },
-            M98: { label: "Aujourd'hui", hour: "21:00", status: "En cours 36'" },
+            M98: { label: "Ven. 10/07", hour: "21:00", status: "Terminé" },
             M99: { label: "Sam. 11/07", hour: "23:00", status: "À venir" },
             M100: { label: "Dim. 12/07", hour: "03:00", status: "À venir" },
             M101: { label: "Mar. 14/07", hour: "21:00", status: "À venir" },
@@ -327,7 +327,7 @@
             M95: { score1: "3", score2: "2" },
             M96: { score1: "0 (4)", score2: "0 (3)" },
             M97: { score1: "2", score2: "0" },
-            M98: { score1: "1", score2: "0", status: "En cours" }
+            M98: { score1: "2", score2: "1" }
         };
         return results[id] || null;
     }
