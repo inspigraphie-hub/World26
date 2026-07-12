@@ -115,9 +115,10 @@ class FanExperience {
             { date: "07/07/2026", display: "7-juil", hour: "22:00", phase: "Huiti?mes de finale", home: "Suisse", away: "Colombie", scoreHome: "0 (4)", scoreAway: "0 (3)", status: "Termin?", winner: "Suisse" },
             { date: "09/07/2026", display: "9-juil", hour: "21:00", phase: "Quarts de finale", home: "France", away: "Maroc", scoreHome: "2", scoreAway: "0", status: "Termin?", winner: "France" },
             { date: "10/07/2026", display: "10-juil", hour: "21:00", phase: "Quarts de finale", home: "Espagne", away: "Belgique", scoreHome: "2", scoreAway: "1", status: "Terminé", winner: "Espagne" },
-            { date: "11/07/2026", display: "11-juil", hour: "23:00", phase: "Quarts de finale", home: "Norvège", away: "Angleterre", scoreHome: "", scoreAway: "", status: "À venir", winner: "" },
-            { date: "12/07/2026", display: "12-juil", hour: "03:00", phase: "Quarts de finale", home: "Argentine", away: "Suisse", scoreHome: "", scoreAway: "", status: "À venir", winner: "" },
-            { date: "14/07/2026", display: "14-juil", hour: "21:00", phase: "Demi-finales", home: "France", away: "Espagne", scoreHome: "", scoreAway: "", status: "À venir", winner: "" }
+            { date: "11/07/2026", display: "11-juil", hour: "23:00", phase: "Quarts de finale", home: "Norvège", away: "Angleterre", scoreHome: "", scoreAway: "", status: "Terminé", winner: "Angleterre" },
+            { date: "12/07/2026", display: "12-juil", hour: "03:00", phase: "Quarts de finale", home: "Argentine", away: "Suisse", scoreHome: "3", scoreAway: "1", status: "Terminé", winner: "Argentine" },
+            { date: "14/07/2026", display: "14-juil", hour: "21:00", phase: "Demi-finales", home: "France", away: "Espagne", scoreHome: "", scoreAway: "", status: "À venir", winner: "" },
+            { date: "15/07/2026", display: "15-juil", hour: "21:00", phase: "Demi-finales", home: "Angleterre", away: "Argentine", scoreHome: "", scoreAway: "", status: "À venir", winner: "" }
         ];
 
         return fixtures.map(fixture => ({

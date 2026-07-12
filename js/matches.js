@@ -298,8 +298,8 @@
             M96: { label: "Mar. 07/07", hour: "22:00", status: "Term. (TB)" },
             M97: { label: "Jeu. 09/07", hour: "21:00", status: "Terminé" },
             M98: { label: "Ven. 10/07", hour: "21:00", status: "Terminé" },
-            M99: { label: "Sam. 11/07", hour: "23:00", status: "À venir" },
-            M100: { label: "Dim. 12/07", hour: "03:00", status: "À venir" },
+            M99: { label: "Sam. 11/07", hour: "23:00", status: "Terminé" },
+            M100: { label: "Dim. 12/07", hour: "03:00", status: "AP" },
             M101: { label: "Mar. 14/07", hour: "21:00", status: "À venir" },
             M102: { label: "Mer. 15/07", hour: "21:00", status: "À venir" },
             final: { label: "Dim. 19/07", hour: "21:00", status: "À venir" },
@@ -327,12 +327,19 @@
             M95: { score1: "3", score2: "2" },
             M96: { score1: "0 (4)", score2: "0 (3)" },
             M97: { score1: "2", score2: "0" },
-            M98: { score1: "2", score2: "1" }
+            M98: { score1: "2", score2: "1" },
+            M99: { score1: "", score2: "", winner: "Angleterre" },
+            M100: { score1: "3", score2: "1" }
         };
         return results[id] || null;
     }
 
     winnerFromProjectedResult(team1, team2, result) {
+        if(result.winner) {
+            const winnerName = this.normalize(result.winner);
+            if(winnerName === this.normalize(team1.team)) return team1;
+            if(winnerName === this.normalize(team2.team)) return team2;
+        }
         if(result.status && !this.normalize(result.status).includes("termine")) return null;
         const scores = this.projectedScoreParts(result);
         if(scores.score1 !== scores.score2) return scores.score1 > scores.score2 ? team1 : team2;
@@ -343,6 +350,11 @@
     }
 
     loserFromProjectedResult(team1, team2, result) {
+        if(result.winner) {
+            const winnerName = this.normalize(result.winner);
+            if(winnerName === this.normalize(team1.team)) return team2;
+            if(winnerName === this.normalize(team2.team)) return team1;
+        }
         if(result.status && !this.normalize(result.status).includes("termine")) return null;
         const scores = this.projectedScoreParts(result);
         if(scores.score1 !== scores.score2) return scores.score1 < scores.score2 ? team1 : team2;

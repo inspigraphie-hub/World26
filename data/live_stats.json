@@ -1,6 +1,6 @@
 {
-  "updatedAt": "2026-07-10T20:24:25.238Z",
-  "source": "manual-quarter-france-maroc-update",
+  "updatedAt": "2026-07-12T10:59:36.164Z",
+  "source": "manual-quarter-argentina-switzerland-update",
   "scorers": [
     {
       "Rang": 1,
@@ -27,10 +27,10 @@
       "Photo": "kane.png"
     },
     {
-      "Rang": 5,
-      "Joueurs": "Ousmane Dembélé",
-      "Buts": 5,
-      "Photo": "dembele.png"
+      "Rang": 4,
+      "Joueurs": "Jude Bellingham",
+      "Buts": 6,
+      "Photo": "jude.png"
     }
   ],
   "assists": [
