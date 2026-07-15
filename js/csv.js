@@ -181,7 +181,7 @@ class MatchManager {
             { date: "10/07/2026", display: "10-juil", hour: "21:00", phase: "Quarts de finale", home: "Espagne", away: "Belgique", homeFlag: "es.png", awayFlag: "be.png", scoreHome: "2", scoreAway: "1", status: "Terminé", winner: "Espagne" },
             { date: "11/07/2026", display: "11-juil", hour: "23:00", phase: "Quarts de finale", home: "Norvège", away: "Angleterre", homeFlag: "no.png", awayFlag: "gb-eng.png", scoreHome: "", scoreAway: "", status: "Terminé", winner: "Angleterre" },
             { date: "12/07/2026", display: "12-juil", hour: "03:00", phase: "Quarts de finale", home: "Argentine", away: "Suisse", homeFlag: "ar.png", awayFlag: "ch.png", scoreHome: "3", scoreAway: "1", status: "Terminé", winner: "Argentine" },
-            { date: "14/07/2026", display: "14-juil", hour: "21:00", phase: "Demi-finales", home: "France", away: "Espagne", homeFlag: "fr.png", awayFlag: "es.png", scoreHome: "", scoreAway: "", status: "À venir", winner: "" },
+            { date: "14/07/2026", display: "14-juil", hour: "21:00", phase: "Demi-finales", home: "France", away: "Espagne", homeFlag: "fr.png", awayFlag: "es.png", scoreHome: "0", scoreAway: "2", status: "Terminé", winner: "Espagne" },
             { date: "15/07/2026", display: "15-juil", hour: "21:00", phase: "Demi-finales", home: "Angleterre", away: "Argentine", homeFlag: "gb-eng.png", awayFlag: "ar.png", scoreHome: "", scoreAway: "", status: "À venir", winner: "" }
         ];
 

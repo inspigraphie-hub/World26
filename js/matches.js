@@ -300,7 +300,7 @@
             M98: { label: "Ven. 10/07", hour: "21:00", status: "Terminé" },
             M99: { label: "Sam. 11/07", hour: "23:00", status: "Terminé" },
             M100: { label: "Dim. 12/07", hour: "03:00", status: "AP" },
-            M101: { label: "Mar. 14/07", hour: "21:00", status: "À venir" },
+            M101: { label: "Mar. 14/07", hour: "21:00", status: "Terminé" },
             M102: { label: "Mer. 15/07", hour: "21:00", status: "À venir" },
             final: { label: "Dim. 19/07", hour: "21:00", status: "À venir" },
             third: { label: "Sam. 18/07", hour: "23:00", status: "À venir" }
@@ -329,7 +329,8 @@
             M97: { score1: "2", score2: "0" },
             M98: { score1: "2", score2: "1" },
             M99: { score1: "", score2: "", winner: "Angleterre" },
-            M100: { score1: "3", score2: "1" }
+            M100: { score1: "3", score2: "1" },
+            M101: { score1: "0", score2: "2" }
         };
         return results[id] || null;
     }
