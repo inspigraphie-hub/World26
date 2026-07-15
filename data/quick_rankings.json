@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-07-11T11:22:05.591Z",
+  "updatedAt": "2026-07-15T19:11:27.523Z",
   "bestAttack": [
     {
       "rank": 1,
@@ -24,38 +24,38 @@
     {
       "rank": 1,
       "team": "Espagne",
-      "goals": 1,
-      "value": "1 encaissé"
+      "goals": 2,
+      "value": "2 buts encaissés"
     },
     {
       "rank": 2,
       "team": "Colombie",
-      "goals": 1,
-      "value": "1 encaissé"
+      "goals": 2,
+      "value": "2 buts encaissés"
     },
     {
       "rank": 3,
       "team": "France",
-      "goals": 2,
-      "value": "2 encaissés"
+      "goals": 4,
+      "value": "4 buts encaissés"
     }
   ],
   "inForm": [
     {
       "rank": 1,
-      "team": "France",
+      "team": "Espagne",
       "points": 18,
       "value": "18 pts"
     },
     {
       "rank": 2,
-      "team": "Espagne",
-      "points": 16,
-      "value": "16 pts"
+      "team": "Argentine",
+      "points": 15,
+      "value": "15 pts"
     },
     {
       "rank": 3,
-      "team": "Argentine",
+      "team": "Angleterre",
       "points": 15,
       "value": "15 pts"
     }
